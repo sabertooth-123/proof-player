@@ -1,0 +1,152 @@
+{
+  "id": "graph_path",
+  "title": "Growing a path graph",
+  "description": "A path is built one edge at a time; each proof step adds an edge established by the current goal.",
+  "source": "\n\n\ninductive Reach : Nat → Nat → Prop where\n  | edge12 : Reach 1 2\n  | edge23 : Reach 2 3\n  | edge34 : Reach 3 4\n  | edge45 : Reach 4 5\n  | edge56 : Reach 5 6\n  | trans {a b c : Nat} : Reach a b → Reach b c → Reach a c\n\ntheorem path_1_to_6 : Reach 1 6 := by\n  apply Reach.trans\n  · exact Reach.edge12\n  · apply Reach.trans\n    · exact Reach.edge23\n    · apply Reach.trans\n      · exact Reach.edge34\n      · apply Reach.trans\n        · exact Reach.edge45\n        · exact Reach.edge56\n",
+  "viz": "graph",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 12,
+      "tactic": "theorem path_1_to_6 : Reach 1 6 := by",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "Reach 1 6"
+        }
+      ],
+      "explanation": "The initial goal is to prove that there is a path from node 1 to node 6."
+    },
+    {
+      "index": 1,
+      "line": 13,
+      "tactic": "apply Reach.trans",
+      "goals": [
+        {
+          "caseName": "a",
+          "hypotheses": [],
+          "target": "Reach 1 ?b"
+        },
+        {
+          "caseName": "a",
+          "hypotheses": [],
+          "target": "Reach ?b 6"
+        },
+        {
+          "caseName": "b",
+          "hypotheses": [],
+          "target": "Nat"
+        }
+      ],
+      "explanation": "Reach.trans splits the path goal into two reachability goals with an intermediate node, while Lean also displays a type-inference goal."
+    },
+    {
+      "index": 2,
+      "line": 14,
+      "tactic": "· exact Reach.edge12",
+      "goals": [],
+      "explanation": "The edge from node 1 to node 2 is established, so the first reachability goal is solved."
+    },
+    {
+      "index": 3,
+      "line": 15,
+      "tactic": "· apply Reach.trans",
+      "goals": [
+        {
+          "caseName": "a.a",
+          "hypotheses": [],
+          "target": "Reach 2 ?a.b✝"
+        },
+        {
+          "caseName": "a.a",
+          "hypotheses": [],
+          "target": "Reach ?a.b✝ 6"
+        },
+        {
+          "caseName": "a.b",
+          "hypotheses": [],
+          "target": "Nat"
+        }
+      ],
+      "explanation": "The remaining path is split again, asking for a path from node 2 to an intermediate node and then from that node to node 6."
+    },
+    {
+      "index": 4,
+      "line": 16,
+      "tactic": "· exact Reach.edge23",
+      "goals": [],
+      "explanation": "The edge from node 2 to node 3 is established, solving the current first reachability goal."
+    },
+    {
+      "index": 5,
+      "line": 17,
+      "tactic": "· apply Reach.trans",
+      "goals": [
+        {
+          "caseName": "a.a.a",
+          "hypotheses": [],
+          "target": "Reach 3 ?a.a.b✝"
+        },
+        {
+          "caseName": "a.a.a",
+          "hypotheses": [],
+          "target": "Reach ?a.a.b✝ 6"
+        },
+        {
+          "caseName": "a.a.b",
+          "hypotheses": [],
+          "target": "Nat"
+        }
+      ],
+      "explanation": "The remaining path is split again, introducing another intermediate node before reaching node 6."
+    },
+    {
+      "index": 6,
+      "line": 18,
+      "tactic": "· exact Reach.edge34",
+      "goals": [],
+      "explanation": "The edge from node 3 to node 4 is established, solving the current first reachability goal."
+    },
+    {
+      "index": 7,
+      "line": 19,
+      "tactic": "· apply Reach.trans",
+      "goals": [
+        {
+          "caseName": "a.a.a.a",
+          "hypotheses": [],
+          "target": "Reach 4 ?a.a.a.b✝"
+        },
+        {
+          "caseName": "a.a.a.a",
+          "hypotheses": [],
+          "target": "Reach ?a.a.a.b✝ 6"
+        },
+        {
+          "caseName": "a.a.a.b",
+          "hypotheses": [],
+          "target": "Nat"
+        }
+      ],
+      "explanation": "The remaining path is split again, extending the chain toward node 6."
+    },
+    {
+      "index": 8,
+      "line": 20,
+      "tactic": "· exact Reach.edge45",
+      "goals": [],
+      "explanation": "The edge from node 4 to node 5 is established, solving the current first reachability goal."
+    },
+    {
+      "index": 9,
+      "line": 21,
+      "tactic": "· exact Reach.edge56",
+      "goals": [],
+      "explanation": "The final edge from node 5 to node 6 completes the path from node 1 to node 6."
+    }
+  ]
+}

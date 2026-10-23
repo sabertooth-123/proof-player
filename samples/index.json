@@ -10,5 +10,11 @@
     "title": "Reversing a list",
     "description": "Each rewrite peels one element off the front and moves it to the back.",
     "viz": "list"
+  },
+  {
+    "id": "graph_path",
+    "title": "Growing a path graph",
+    "description": "A path is built one edge at a time; each proof step adds an edge established by the current goal.",
+    "viz": "graph"
   }
 ]
