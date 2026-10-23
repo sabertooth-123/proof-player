@@ -1,0 +1,14 @@
+[
+  {
+    "id": "len_append",
+    "title": "Length of an append",
+    "description": "Induction splits the goal into a nil case and a cons case; watch each one shrink to nothing.",
+    "viz": "goal"
+  },
+  {
+    "id": "rev_three",
+    "title": "Reversing a list",
+    "description": "Each rewrite peels one element off the front and moves it to the back.",
+    "viz": "list"
+  }
+]

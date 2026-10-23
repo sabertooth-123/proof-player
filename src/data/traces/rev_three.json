@@ -1,0 +1,68 @@
+{
+  "id": "rev_three",
+  "title": "Reversing a list",
+  "description": "Each rewrite peels one element off the front and moves it to the back.",
+  "source": "theorem rev_three : [1, 2, 3].reverse = [3, 2, 1] := by\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rfl\n",
+  "viz": "list",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 1,
+      "tactic": "theorem rev_three : [1, 2, 3].reverse = [3, 2, 1] := by",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[1, 2, 3].reverse = [3, 2, 1]"
+        }
+      ],
+      "explanation": "The statement to prove: reversing [1, 2, 3] gives [3, 2, 1]."
+    },
+    {
+      "index": 1,
+      "line": 2,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[2, 3].reverse ++ [1] = [3, 2, 1]"
+        }
+      ],
+      "explanation": "reverse (1 :: rest) = reverse rest ++ [1]: the 1 moves to the back."
+    },
+    {
+      "index": 2,
+      "line": 3,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[3].reverse ++ [2] ++ [1] = [3, 2, 1]"
+        }
+      ],
+      "explanation": "Same rule again: the 2 moves behind the remaining list."
+    },
+    {
+      "index": 3,
+      "line": 4,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[].reverse ++ [3] ++ [2] ++ [1] = [3, 2, 1]"
+        }
+      ],
+      "explanation": "And once more for the 3. Only the empty list is left to reverse."
+    },
+    {
+      "index": 4,
+      "line": 5,
+      "tactic": "rfl",
+      "goals": [],
+      "explanation": "Both sides now compute to [3, 2, 1], so rfl closes the goal: proof complete."
+    }
+  ]
+}

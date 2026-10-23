@@ -1,0 +1,8 @@
+[
+  "The statement to prove: appending two lists adds their lengths.",
+  "Induction on xs. First case: xs is the empty list.",
+  "Both sides simplify to ys.length, so the nil case closes.",
+  "Second case: xs is x :: xs, and we get the induction hypothesis ih for the shorter list.",
+  "Simplifying with ih turns the goal into pure arithmetic about lengths.",
+  "omega solves the linear arithmetic. Both cases are closed: proof complete."
+]

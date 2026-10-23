@@ -1,0 +1,7 @@
+[
+  "The statement to prove: reversing [1, 2, 3] gives [3, 2, 1].",
+  "reverse (1 :: rest) = reverse rest ++ [1]: the 1 moves to the back.",
+  "Same rule again: the 2 moves behind the remaining list.",
+  "And once more for the 3. Only the empty list is left to reverse.",
+  "Both sides now compute to [3, 2, 1], so rfl closes the goal: proof complete."
+]

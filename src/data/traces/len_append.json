@@ -1,0 +1,143 @@
+{
+  "id": "len_append",
+  "title": "Length of an append",
+  "description": "Induction splits the goal into a nil case and a cons case; watch each one shrink to nothing.",
+  "source": "theorem len_append (xs ys : List Nat) : (xs ++ ys).length = xs.length + ys.length := by\n  induction xs with\n  | nil =>\n    simp\n  | cons x xs ih =>\n    simp [ih]\n    omega\n",
+  "viz": "goal",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 1,
+      "tactic": "theorem len_append (xs ys : List Nat) : (xs ++ ys).length = xs.length + ys.length := by",
+      "goals": [
+        {
+          "hypotheses": [
+            {
+              "names": [
+                "xs",
+                "ys"
+              ],
+              "type": "List Nat"
+            }
+          ],
+          "target": "(xs ++ ys).length = xs.length + ys.length"
+        }
+      ],
+      "explanation": "The statement to prove: appending two lists adds their lengths."
+    },
+    {
+      "index": 1,
+      "line": 3,
+      "tactic": "| nil =>",
+      "goals": [
+        {
+          "caseName": "nil",
+          "hypotheses": [
+            {
+              "names": [
+                "ys"
+              ],
+              "type": "List Nat"
+            }
+          ],
+          "target": "([] ++ ys).length = [].length + ys.length"
+        }
+      ],
+      "explanation": "Induction on xs. First case: xs is the empty list."
+    },
+    {
+      "index": 2,
+      "line": 4,
+      "tactic": "simp",
+      "goals": [],
+      "explanation": "Both sides simplify to ys.length, so the nil case closes."
+    },
+    {
+      "index": 3,
+      "line": 5,
+      "tactic": "| cons x xs ih =>",
+      "goals": [
+        {
+          "caseName": "cons",
+          "hypotheses": [
+            {
+              "names": [
+                "ys"
+              ],
+              "type": "List Nat"
+            },
+            {
+              "names": [
+                "x"
+              ],
+              "type": "Nat"
+            },
+            {
+              "names": [
+                "xs"
+              ],
+              "type": "List Nat"
+            },
+            {
+              "names": [
+                "ih"
+              ],
+              "type": "(xs ++ ys).length = xs.length + ys.length"
+            }
+          ],
+          "target": "(x :: xs ++ ys).length = (x :: xs).length + ys.length"
+        }
+      ],
+      "explanation": "Second case: xs is x :: xs, and we get the induction hypothesis ih for the shorter list."
+    },
+    {
+      "index": 4,
+      "line": 6,
+      "tactic": "simp [ih]",
+      "goals": [
+        {
+          "caseName": "cons",
+          "hypotheses": [
+            {
+              "names": [
+                "ys"
+              ],
+              "type": "List Nat"
+            },
+            {
+              "names": [
+                "x"
+              ],
+              "type": "Nat"
+            },
+            {
+              "names": [
+                "xs"
+              ],
+              "type": "List Nat"
+            },
+            {
+              "names": [
+                "ih"
+              ],
+              "type": "(xs ++ ys).length = xs.length + ys.length"
+            }
+          ],
+          "target": "xs.length + ys.length + 1 = xs.length + 1 + ys.length"
+        }
+      ],
+      "explanation": "Simplifying with ih turns the goal into pure arithmetic about lengths."
+    },
+    {
+      "index": 5,
+      "line": 7,
+      "tactic": "omega",
+      "goals": [],
+      "explanation": "omega solves the linear arithmetic. Both cases are closed: proof complete."
+    }
+  ]
+}
