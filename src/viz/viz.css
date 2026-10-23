@@ -1,0 +1,72 @@
+/* M3 styles. All class names start with pp- ; variables start with --pp- */
+:root {
+  --pp-surface: #f7f8fa;
+  --pp-border: #d5dae1;
+  --pp-text: #1c2733;
+  --pp-muted: #627084;
+  --pp-changed: #0b6e8a;
+  --pp-changed-bg: #dff1f6;
+  --pp-ok: #23764a;
+  --pp-ok-bg: #e0f3e8;
+  --pp-removed: #a8402f;
+  --pp-mono: "JetBrains Mono", "Fira Code", ui-monospace, "DejaVu Sans Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pp-surface: #1b222b;
+    --pp-border: #364250;
+    --pp-text: #e6ebf1;
+    --pp-muted: #94a3b5;
+    --pp-changed: #6fd0ea;
+    --pp-changed-bg: #17394a;
+    --pp-ok: #6fd6a0;
+    --pp-ok-bg: #173a2a;
+    --pp-removed: #f0907e;
+  }
+}
+
+.pp-panel { background: var(--pp-surface); border: 1px solid var(--pp-border); border-radius: 8px; padding: 14px 16px; color: var(--pp-text); }
+.pp-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.pp-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.pp-muted { color: var(--pp-muted); font-size: 13px; }
+
+/* Goal panel */
+.pp-goal { border-top: 1px solid var(--pp-border); padding: 10px 0; }
+.pp-goal:first-of-type { border-top: 0; padding-top: 0; }
+.pp-case { display: inline-block; font-family: var(--pp-mono); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.pp-hyps { list-style: none; margin: 0 0 8px; padding: 0; font-family: var(--pp-mono); font-size: 14px; }
+.pp-hyps li { display: flex; gap: 8px; padding: 2px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+.pp-names { font-weight: 600; }
+.pp-hyps code, .pp-target code { font-family: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pp-target { display: flex; gap: 8px; padding: 6px; border-radius: 4px; font-family: var(--pp-mono); font-size: 15px; font-weight: 600; border-top: 2px solid var(--pp-text); }
+.pp-turnstile { color: var(--pp-muted); }
+.pp-new { background: var(--pp-changed-bg); box-shadow: inset 3px 0 0 var(--pp-changed); }
+.pp-removed { color: var(--pp-removed); text-decoration: line-through; opacity: 0.65; }
+.pp-done { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 6px; background: var(--pp-ok-bg); color: var(--pp-ok); font-weight: 600; }
+
+/* List view */
+.pp-row { margin-bottom: 14px; }
+.pp-row-label { margin-bottom: 6px; }
+.pp-boxes { display: flex; flex-wrap: wrap; gap: 6px; }
+.pp-box { min-width: 44px; padding: 10px 12px; text-align: center; font-family: var(--pp-mono); font-size: 18px; font-weight: 600; border: 2px solid var(--pp-border); border-radius: 6px; background: var(--pp-surface); }
+.pp-box.pp-changed { border-color: var(--pp-changed); background: var(--pp-changed-bg); animation: pp-pop 0.35s ease-out; }
+@keyframes pp-pop { from { transform: translateY(-6px); } to { transform: none; } }
+
+/* Goal chips */
+.pp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pp-chip { padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--pp-border); font-family: var(--pp-mono); font-size: 14px; }
+.pp-chip.pp-changed { border-color: var(--pp-changed); background: var(--pp-changed-bg); }
+
+/* Graph view */
+.pp-graph { width: 100%; max-width: 420px; height: auto; display: block; }
+.pp-edge { stroke: var(--pp-muted); stroke-width: 2; }
+.pp-edge.pp-changed { stroke: var(--pp-changed); stroke-width: 3; stroke-dasharray: 200; animation: pp-draw 0.5s ease-out; }
+@keyframes pp-draw { from { stroke-dashoffset: 200; } to { stroke-dashoffset: 0; } }
+.pp-arrow { fill: var(--pp-muted); }
+.pp-arrow-new { fill: var(--pp-changed); }
+.pp-node { fill: var(--pp-surface); stroke: var(--pp-text); stroke-width: 2; }
+.pp-node-text { fill: var(--pp-text); font-family: var(--pp-mono); font-size: 14px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-box.pp-changed, .pp-edge.pp-changed { animation: none; }
+}
