@@ -6,12 +6,6 @@
     "viz": "goal"
   },
   {
-    "id": "rev_three",
-    "title": "Reversing a list",
-    "description": "Each rewrite peels one element off the front and moves it to the back.",
-    "viz": "list"
-  },
-  {
     "id": "graph_path",
     "title": "Finding a path in a graph",
     "description": "Each step proves one edge is in the graph and walks along it; the path 1 → 2 → 5 → 6 grows edge by edge.",
@@ -22,5 +16,11 @@
     "title": "Reversing a longer list",
     "description": "Repeated reverse rewrites expose how the list changes step by step.",
     "viz": "list"
+  },
+  {
+    "id": "and_split",
+    "title": "Splitting a conjunction",
+    "description": "The constructor tactic splits a conjunction goal into two separate goals, each solved by reflexivity.",
+    "viz": "goal"
   }
 ]

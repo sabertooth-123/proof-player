@@ -1,0 +1,61 @@
+{
+  "id": "and_split",
+  "title": "Splitting a conjunction",
+  "description": "The constructor tactic splits a conjunction goal into two separate goals, each solved by reflexivity.",
+  "source": "\ntheorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by\n  constructor\n  · rfl\n  · rfl\n",
+  "viz": "goal",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 2,
+      "tactic": "theorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "2 + 2 = 4 ∧ [1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "The initial goal is to prove that 2 + 2 = 4 and the length of the list [1, 2, 3] is 3.",
+      "raw": "⊢ 2 + 2 = 4 ∧ [1, 2, 3].length = 3"
+    },
+    {
+      "index": 1,
+      "line": 3,
+      "tactic": "constructor",
+      "goals": [
+        {
+          "caseName": "left",
+          "hypotheses": [],
+          "target": "2 + 2 = 4"
+        },
+        {
+          "caseName": "right",
+          "hypotheses": [],
+          "target": "[1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "The constructor tactic splits the conjunction into two goals: 2 + 2 = 4 and [1, 2, 3].length = 3.",
+      "raw": "case left\n⊢ 2 + 2 = 4\n\ncase right\n⊢ [1, 2, 3].length = 3"
+    },
+    {
+      "index": 2,
+      "line": 4,
+      "tactic": "· rfl",
+      "goals": [],
+      "explanation": "The left goal has been solved, and no goals remain in the extracted state.",
+      "raw": ""
+    },
+    {
+      "index": 3,
+      "line": 5,
+      "tactic": "· rfl",
+      "goals": [],
+      "explanation": "The right goal has been solved, and no goals remain in the extracted state.",
+      "raw": ""
+    }
+  ]
+}

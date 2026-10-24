@@ -1,0 +1,7 @@
+
+[
+  "The initial goal is to prove that 2 + 2 = 4 and the length of the list [1, 2, 3] is 3.",
+  "The constructor tactic splits the conjunction into two goals: 2 + 2 = 4 and [1, 2, 3].length = 3.",
+  "The left goal has been solved, and no goals remain in the extracted state.",
+  "The right goal has been solved, and no goals remain in the extracted state."
+]
