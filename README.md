@@ -1,6 +1,23 @@
 # Proof Player
 
-Syntax Error 2026, Functional Programming track, problem 3. Step through a Lean proof one line at a time; the goal panel shows what Lean reports after that line, and the picture is computed from the goal.
+Step through a Lean 4 proof one tactic at a time, like scrubbing a video. After each line you see exactly what Lean has left to prove, and a picture of it: list boxes that rearrange, a path that grows through a graph, goals that split and close.
+
+Syntax Error 2026, Functional Programming track, problem 3.
+
+**Live demo:** _link added after deploy_
+
+## Why it's real
+
+Nothing on screen is typed by hand. The goals come from Lean itself:
+
+```
+samples/*.lean  ──►  insert trace_state after every tactic  ──►  lean --json  ──►  parse goals  ──►  src/data/traces/*.json  ──►  app
+```
+
+- `scripts/extract-traces.mjs` inserts Lean's `trace_state` tactic after each line, runs `lean --json`, and parses the goal text Lean prints (hypotheses, `⊢` target, `case` names).
+- Every trace records the Lean version it was extracted with, shown in the app under the goal panel.
+- Each picture is computed from the goal text alone, never from the step number. If Lean's goal changes, the picture changes.
+- Change a sample, rerun `npm run traces`, and the app shows Lean's new answer.
 
 ## Run it
 
@@ -9,7 +26,28 @@ npm install
 npm run dev
 ```
 
-You do not need Lean to run the app. Traces in `src/data/traces/` are committed JSON.
+You do not need Lean to run the app: the traces are committed JSON.
+
+Keys: `←` / `→` step back and forward.
+
+## Checks
+
+```bash
+npm run build   # type-check and production build
+npm test        # derivers on real traces + both panels rendered at every step of every proof
+```
+
+## Regenerating traces (needs Lean)
+
+Install Lean with [elan](https://github.com/leanprover/elan) (traces were made with Lean 4.35.0), then:
+
+```bash
+npm run traces
+```
+
+Run one sample only: `npm run traces -- list_demo`. If `lean` is not on PATH or in `~/.elan/bin`, set `LEAN` to its path.
+
+To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }` to `samples/index.json` (`viz` is `list`, `graph` or `goal`), optionally add `explanations/<id>.json` (one sentence per step), then run `npm run traces` and commit the new `src/data/traces/<id>.json`.
 
 ## Layout
 
@@ -19,25 +57,16 @@ You do not need Lean to run the app. Traces in `src/data/traces/` are committed 
 | `explanations/` | M1 | `<id>.json`: one sentence per step. |
 | `scripts/extract-traces.mjs` | M4 | Inserts `trace_state`, runs `lean --json`, writes traces. |
 | `src/types/proof.ts` | all | The contract. Frozen; announce changes before merging. |
-| `src/data/traces/` | M4 | Generated traces. `mock.json` until real ones land. |
-| `src/hooks/`, `src/components/` | M2 | Player state, shell, code viewer, controls. |
-| `src/components/` (Goal/Viz panels), `src/viz/` | M3 | Goal panel and derived visualizations. |
+| `src/data/traces/` | M4 | Generated traces (`mock.json` is only a fallback). |
+| `src/hooks/`, `src/App.*`, `src/components/` (shell, code viewer, controls, selector) | M2 | Player state and layout. |
+| `src/components/` (Goal/Visualization panels, HowItWorks), `src/viz/` | M3 | Goal panel and derived pictures. |
+| `tests/` | M3/M4 | `npm test`. |
 
-## Rules
+## Team rules
 
-- `main` always runs; `npm run build` must pass before every merge.
-- Branches: `feat/samples` (M1), `feat/player` (M2), `feat/viz` (M3), `feat/extract` (M4).
-- Only M4 edits `package.json`; only M2 edits `App.tsx`.
-
-## Regenerating traces (needs Lean)
-
-```bash
-npm run traces
-```
-
-Run one sample only: `npm run traces -- rev_three`. If `lean` is not on PATH or in `~/.elan/bin`, set `LEAN` to its path.
-
-To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }` to `samples/index.json`, optionally add `explanations/<id>.json` (one sentence per step), then run `npm run traces` and commit the new `src/data/traces/<id>.json`.
+- `main` always runs; `npm run build` and `npm test` must pass before every merge.
+- Work on a branch from a fresh `main`, open a PR, and only edit your own files.
+- Save files from the editor, not with PowerShell `>` (it writes UTF-16).
 
 ## Writing samples (M1)
 
@@ -45,7 +74,7 @@ To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }
 - One tactic per line. A tactic split across lines is rejected.
 - `induction x with` / `cases x with` are fine; the `| case =>` lines become steps.
 - `·` bullets are fine.
-- If the explanations file exists, its sentence count must equal the step count (the script tells you the count).
+- If the explanations file exists, its sentence count must equal the step count (the script tells you the count). Each sentence describes the state after its line runs.
 
 ## Extractor notes (M4)
 
