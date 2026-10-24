@@ -1,0 +1,67 @@
+{
+  "id": "and_split",
+  "title": "Splitting a conjunction",
+  "description": "constructor splits the ∧ into two goals; rfl closes one, then the other.",
+  "source": "theorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by\n  constructor\n  · rfl\n  · rfl\n",
+  "viz": "goal",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 1,
+      "tactic": "theorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "2 + 2 = 4 ∧ [1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "The goal is a conjunction: we must prove both 2 + 2 = 4 and [1, 2, 3].length = 3.",
+      "raw": "⊢ 2 + 2 = 4 ∧ [1, 2, 3].length = 3"
+    },
+    {
+      "index": 1,
+      "line": 2,
+      "tactic": "constructor",
+      "goals": [
+        {
+          "caseName": "left",
+          "hypotheses": [],
+          "target": "2 + 2 = 4"
+        },
+        {
+          "caseName": "right",
+          "hypotheses": [],
+          "target": "[1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "constructor splits the ∧ into two separate goals, case left and case right, each proved on its own.",
+      "raw": "case left\n⊢ 2 + 2 = 4\n\ncase right\n⊢ [1, 2, 3].length = 3"
+    },
+    {
+      "index": 2,
+      "line": 3,
+      "tactic": "· rfl",
+      "goals": [
+        {
+          "caseName": "right",
+          "hypotheses": [],
+          "target": "[1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "rfl closes the left goal, since 2 + 2 computes to 4. Only the right goal is left.",
+      "raw": "case right\n⊢ [1, 2, 3].length = 3"
+    },
+    {
+      "index": 3,
+      "line": 4,
+      "tactic": "· rfl",
+      "goals": [],
+      "explanation": "rfl closes the right goal too, since the list has three elements: proof complete.",
+      "raw": ""
+    }
+  ]
+}

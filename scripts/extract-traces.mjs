@@ -75,7 +75,13 @@ export function instrument(source) {
       if (next === -1 || nextIndent <= indentOf(line)) throw new ExtractError(`line ${i + 1}: block "${t}" has no body`);
       return emit(line, i, nextIndent);
     }
-    if (isBullet(t)) return emit(line, i, indentOf(line) + 2);
+    if (isBullet(t)) {
+      // `· tac` with a deeper block under it: trace inside the bullet, after `tac`.
+      // A one-line bullet closes its goal, so trace after it at the bullet's own
+      // indent instead; that shows the goals still open (e.g. `case right`).
+      const opensBody = next !== -1 && nextIndent > indentOf(line);
+      return emit(line, i, opensBody ? indentOf(line) + 2 : indentOf(line));
+    }
     if (i > header && next !== -1 && nextIndent > indentOf(line)) {
       throw new ExtractError(`line ${i + 1}: multi-line tactics are not supported; keep "${t}" on one line`);
     }

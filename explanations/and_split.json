@@ -1,0 +1,6 @@
+[
+  "The goal is a conjunction: we must prove both 2 + 2 = 4 and [1, 2, 3].length = 3.",
+  "constructor splits the ∧ into two separate goals, case left and case right, each proved on its own.",
+  "rfl closes the left goal, since 2 + 2 computes to 4. Only the right goal is left.",
+  "rfl closes the right goal too, since the list has three elements: proof complete."
+]

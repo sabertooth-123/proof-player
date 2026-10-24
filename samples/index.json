@@ -1,14 +1,8 @@
 [
   {
-    "id": "len_append",
-    "title": "Length of an append",
-    "description": "Induction splits the goal into a nil case and a cons case; watch each one shrink to nothing.",
-    "viz": "goal"
-  },
-  {
-    "id": "rev_three",
+    "id": "list_demo",
     "title": "Reversing a list",
-    "description": "Each rewrite peels one element off the front and moves it to the back.",
+    "description": "Each rewrite peels one element off the front and moves it to the back, until both sides match.",
     "viz": "list"
   },
   {
@@ -18,9 +12,15 @@
     "viz": "graph"
   },
   {
-    "id": "list_demo",
-    "title": "Reversing a longer list",
-    "description": "Repeated reverse rewrites expose how the list changes step by step.",
-    "viz": "list"
+    "id": "and_split",
+    "title": "Splitting a conjunction",
+    "description": "constructor splits the ∧ into two goals; rfl closes one, then the other.",
+    "viz": "goal"
+  },
+  {
+    "id": "len_append",
+    "title": "Length of an append",
+    "description": "Induction splits the goal into a nil case and a cons case; watch each one shrink to nothing.",
+    "viz": "goal"
   }
 ]

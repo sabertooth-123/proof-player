@@ -90,6 +90,6 @@ To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }
 ## Extractor notes (M4)
 
 - `lean` stdout is read as **UTF-8**. On Windows the default decoding garbles `⊢` into `âŠ¢`.
-- `trace_state` placement: after a tactic, at that tactic's indent; after a line ending in `by` or `=>`, at the next line's indent; after a `·` bullet, at its indent + 2. Never directly after a line ending in `with`.
+- `trace_state` placement: after a tactic, at that tactic's indent; after a line ending in `by` or `=>`, at the next line's indent; after a one-line `·` bullet, at the bullet's own indent (so the goals still open show); after a `·` bullet that opens a deeper block, at its indent + 2. Never directly after a line ending in `with`.
 - An empty trace means no goals remain in that branch.
 - Lean errors are reported with the line number in the original sample.
