@@ -1,4 +1,3 @@
-
 import AppShell from "./components/AppShell";
 import { useProofPlayer } from "./hooks/useProofPlayer";
 

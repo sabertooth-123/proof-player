@@ -1,4 +1,3 @@
-
 import { useCallback, useState } from "react";
 import { traces } from "../data/traces";
 import type { PlayerState, ProofTrace } from "../types/proof";

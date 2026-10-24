@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 
 interface PlaybackControlsProps {
@@ -30,15 +29,18 @@ export default function PlaybackControls({
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
 
+      // Don't hijack keys while the user is typing or choosing a proof. Buttons are
+      // fine: after a mouse click the button keeps focus, and the keys must still work.
       if (
         target instanceof HTMLElement &&
         (target.isContentEditable ||
-          ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName))
+          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
       ) {
         return;
       }
 
       if (event.code === "Space") {
+        // Also stops a focused button from being "clicked" by the same Space press.
         event.preventDefault();
         if (stepCount > 0) onTogglePlay();
       } else if (event.key === "ArrowLeft") {

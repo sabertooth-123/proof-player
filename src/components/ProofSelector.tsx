@@ -1,4 +1,3 @@
-
 import type { ProofTrace } from "../types/proof";
 
 interface ProofSelectorProps {
@@ -19,7 +18,11 @@ export default function ProofSelector({
       <select
         id="proof-select"
         value={selectedTraceId}
-        onChange={(event) => onSelect(event.target.value)}
+        onChange={(event) => {
+          onSelect(event.target.value);
+          // Hand the arrow keys back to the player instead of the dropdown.
+          event.target.blur();
+        }}
       >
         {traces.map((trace) => (
           <option key={trace.id} value={trace.id}>

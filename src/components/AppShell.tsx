@@ -1,11 +1,11 @@
-
+import { useEffect, useState } from "react";
 import type { ProofTrace, Goal } from "../types/proof";
 import ProofSelector from "./ProofSelector";
 import CodeViewer from "./CodeViewer";
 import PlaybackControls from "./PlaybackControls";
 import { GoalPanel } from "./GoalPanel";
 import { VisualizationPanel } from "./VisualizationPanel";
-import { useEffect, useState } from "react";
+import { HowItWorks } from "./HowItWorks";
 
 interface AppShellProps {
   traces: ProofTrace[];
@@ -19,6 +19,8 @@ interface AppShellProps {
   onReset: () => void;
 }
 
+const PLAY_INTERVAL_MS = 1000;
+
 export default function AppShell({
   traces,
   selectedTrace,
@@ -30,109 +32,80 @@ export default function AppShell({
   onPrev,
   onReset,
 }: AppShellProps) {
-    const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const lastIndex = selectedTrace.steps.length - 1;
 
-    useEffect(() => {
-  if (!isPlaying) return;
+  // Autoplay: one step per tick. Reaching the last step stops it by itself.
+  const playing = isPlaying && currentStepIndex < lastIndex;
 
-  if (currentStepIndex >= selectedTrace.steps.length - 1) {
+  useEffect(() => {
+    if (!playing) return;
+    const timer = window.setTimeout(onNext, PLAY_INTERVAL_MS);
+    return () => window.clearTimeout(timer);
+  }, [playing, currentStepIndex, onNext]);
+
+  const togglePlay = () => setIsPlaying(!playing && currentStepIndex < lastIndex);
+
+  // Any manual action stops autoplay.
+  const stopThen = (action: () => void) => () => {
     setIsPlaying(false);
-    return;
-  }
+    action();
+  };
 
-  const timer = window.setTimeout(() => {
-    onNext();
-  }, 1000);
-
-  return () => window.clearTimeout(timer);
-}, [
-  isPlaying,
-  currentStepIndex,
-  selectedTrace.steps.length,
-  onNext,
-]);
-
-const togglePlay = () => {
-  if (isPlaying) {
-    setIsPlaying(false);
-  } else if (currentStepIndex < selectedTrace.steps.length - 1) {
-    setIsPlaying(true);
-  }
-};
-
-  const isComplete =
-    currentStepIndex === selectedTrace.steps.length - 1 &&
-    currentStep.goals.length === 0;
+  const isComplete = currentStepIndex === lastIndex && currentStep.goals.length === 0;
 
   return (
     <main className="app-shell">
       <header className="app-header">
-        <div>
-          <h1>Proof Player</h1>
-          <p>Explore a proof one tactic at a time.</p>
+        <div className="app-title">
+          <h1>
+            Proof Player <span>step through a Lean proof one tactic at a time</span>
+          </h1>
+          <HowItWorks />
         </div>
         <ProofSelector
           traces={traces}
           selectedTraceId={selectedTrace.id}
           onSelect={(traceId) => {
-  setIsPlaying(false);
-  onSelectTrace(traceId);
-}}
+            setIsPlaying(false);
+            onSelectTrace(traceId);
+          }}
         />
       </header>
 
-{/* TODO: Render <HowItWorks /> here after Vineet's PR is merged. */}
-
       <div className="player-layout">
-        <CodeViewer
-          source={selectedTrace.source}
-          activeLine={currentStep.line}
-        />
+        <div className="left-column">
+          <CodeViewer source={selectedTrace.source} activeLine={currentStep.line} />
 
-        <div className="right-panels">
-  <div>
-    <GoalPanel
-      goals={currentStep.goals}
-      previous={previousGoals}
-      isFinal={isComplete}
-    />
-    <p className="provenance">
-      Goals extracted from Lean {selectedTrace.provenance.lean}
-    </p>
-  </div>
+          <PlaybackControls
+            stepIndex={currentStepIndex}
+            stepCount={selectedTrace.steps.length}
+            isPlaying={playing}
+            onTogglePlay={togglePlay}
+            onNext={stopThen(onNext)}
+            onPrev={stopThen(onPrev)}
+            onReset={stopThen(onReset)}
+          />
 
-  <VisualizationPanel
-    kind={selectedTrace.viz}
-    goals={currentStep.goals}
-    previous={previousGoals}
-  />
-</div>
+          <div className="step-info">
+            <pre className="step-tactic">{currentStep.tactic}</pre>
+            <p className="step-explanation">{currentStep.explanation}</p>
+          </div>
+        </div>
 
+        <div className={`right-panels right-panels--${selectedTrace.viz}`}>
+          <section className="panel">
+            <h2>Goals</h2>
+            <GoalPanel goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+            <p className="provenance">Goals extracted from Lean {selectedTrace.provenance.lean}</p>
+          </section>
+
+          <section className="panel panel--viz">
+            <h2>Visualization</h2>
+            <VisualizationPanel kind={selectedTrace.viz} goals={currentStep.goals} previous={previousGoals} />
+          </section>
+        </div>
       </div>
-
-     <PlaybackControls
-  stepIndex={currentStepIndex}
-  stepCount={selectedTrace.steps.length}
-  isPlaying={isPlaying}
-  onTogglePlay={togglePlay}
-  onNext={() => {
-    setIsPlaying(false);
-    onNext();
-  }}
-  onPrev={() => {
-    setIsPlaying(false);
-    onPrev();
-  }}
-  onReset={() => {
-    setIsPlaying(false);
-    onReset();
-  }}
-/>
-
-      <pre className="step-tactic">
-  {currentStep.tactic}
-</pre>
-<p className="step-explanation">{currentStep.explanation}</p>
     </main>
   );
 }
