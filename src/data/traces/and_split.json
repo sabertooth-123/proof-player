@@ -1,8 +1,8 @@
 {
   "id": "and_split",
   "title": "Splitting a conjunction",
-  "description": "The constructor tactic splits a conjunction goal into two separate goals, each solved by reflexivity.",
-  "source": "\ntheorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by\n  constructor\n  · rfl\n  · rfl\n",
+  "description": "constructor splits the ∧ into two goals; rfl closes one, then the other.",
+  "source": "theorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by\n  constructor\n  · rfl\n  · rfl\n",
   "viz": "goal",
   "provenance": {
     "lean": "4.35.0",
@@ -11,7 +11,7 @@
   "steps": [
     {
       "index": 0,
-      "line": 2,
+      "line": 1,
       "tactic": "theorem and_split : 2 + 2 = 4 ∧ [1, 2, 3].length = 3 := by",
       "goals": [
         {
@@ -19,12 +19,12 @@
           "target": "2 + 2 = 4 ∧ [1, 2, 3].length = 3"
         }
       ],
-      "explanation": "The initial goal is to prove that 2 + 2 = 4 and the length of the list [1, 2, 3] is 3.",
+      "explanation": "The goal is a conjunction: we must prove both 2 + 2 = 4 and [1, 2, 3].length = 3.",
       "raw": "⊢ 2 + 2 = 4 ∧ [1, 2, 3].length = 3"
     },
     {
       "index": 1,
-      "line": 3,
+      "line": 2,
       "tactic": "constructor",
       "goals": [
         {
@@ -38,23 +38,29 @@
           "target": "[1, 2, 3].length = 3"
         }
       ],
-      "explanation": "The constructor tactic splits the conjunction into two goals: 2 + 2 = 4 and [1, 2, 3].length = 3.",
+      "explanation": "constructor splits the ∧ into two separate goals, case left and case right, each proved on its own.",
       "raw": "case left\n⊢ 2 + 2 = 4\n\ncase right\n⊢ [1, 2, 3].length = 3"
     },
     {
       "index": 2,
-      "line": 4,
+      "line": 3,
       "tactic": "· rfl",
-      "goals": [],
-      "explanation": "The left goal has been solved, and no goals remain in the extracted state.",
-      "raw": ""
+      "goals": [
+        {
+          "caseName": "right",
+          "hypotheses": [],
+          "target": "[1, 2, 3].length = 3"
+        }
+      ],
+      "explanation": "rfl closes the left goal, since 2 + 2 computes to 4. Only the right goal is left.",
+      "raw": "case right\n⊢ [1, 2, 3].length = 3"
     },
     {
       "index": 3,
-      "line": 5,
+      "line": 4,
       "tactic": "· rfl",
       "goals": [],
-      "explanation": "The right goal has been solved, and no goals remain in the extracted state.",
+      "explanation": "rfl closes the right goal too, since the list has three elements: proof complete.",
       "raw": ""
     }
   ]

@@ -1,25 +1,40 @@
-# Proof Player — 2-Minute Demo
+# Proof Player: 2-minute demo
 
-## The Problem
+Open https://proof-player-eight.vercel.app/ full screen before you start. **Bold** is what you click; quotes are what you say.
 
-Mathematical proofs can be difficult to follow, especially for beginners. When we see a complete proof, it is not always clear how each tactic changes the goal or how the proof reaches its conclusion.
+## 1. The problem (15 s)
 
-## Our Idea
+"A finished Lean proof is a wall of tactics. You can't see what each line actually did unless you run Lean yourself and click through it line by line."
 
-Proof Player makes proofs easier to understand by letting us step through them like a video. Instead of seeing only the final answer, we can explore the proof one step at a time and understand how the goals change.
+## 2. The idea (10 s)
 
-## Live Demo
+"Proof Player lets you step through a proof like a video. Next to the code, the goals and a picture keep up with each line."
 
-First, we will open `list_demo`. It demonstrates how repeated rewriting simplifies the reversal of a list.
+## 3. Live demo (70 s)
 
-Next, we will explore `graph_path`, which demonstrates a proof involving a graph-related example.
+The page opens on **Reversing a list**. Press **Play**.
 
-Finally, we will open `and_split`. Its initial goal contains a conjunction, meaning two statements must be proved. The `constructor` tactic splits it into two separate goals, and `rfl` solves each one.
+"Each `rw [List.reverse_cons]` peels one element off the front and moves it to the back. Watch the highlighted box move. The top row is where the proof is now, the dashed row is what it has to become. When they match, `rfl` closes it."
 
-## Why Is It Real?
+**Select a proof → Finding a path in a graph**, then press **→** a few times.
 
-The goal states are not typed by hand. Our extraction script uses Lean to compile the proofs and inserts `trace_state` after tactics to capture the actual proof states. These states are then saved as JSON and used by Proof Player.
+"Each `have` proves one edge is in the graph, and each `apply` walks along it. The filled node is where the proof stands, and the path 1 → 2 → 5 → 6 grows edge by edge."
 
-## What Comes Next?
+**Select a proof → Splitting a conjunction**, press **→** twice.
 
-We could add more proof examples, improve the visualizations for different goal types, and provide clearer explanations for each tactic. This would make the tool useful for more complex proofs and help beginners learn formal reasoning interactively.
+"`constructor` splits the ∧ into two goals, case left and case right." Press **→**. "`rfl` closes the left one, and only the right goal is left." Press **→**. "And that one closes too: proof complete."
+
+## 4. Why it's real (20 s)
+
+Click **Show raw Lean output**.
+
+"None of this is typed by hand. Our script inserts Lean's `trace_state` after every tactic, runs Lean, and saves what it prints. This is that exact text. The goals panel and every picture are computed from it, and our tests check that they match."
+
+## 5. What's next (5 s)
+
+"Next: load any Lean file, more kinds of pictures, and running Lean live so you can edit a proof and watch it change."
+
+## If something goes wrong
+
+- The live site doesn't load: run `npm run dev` from the repo and use `http://localhost:5173`.
+- No internet at all: play the backup video.

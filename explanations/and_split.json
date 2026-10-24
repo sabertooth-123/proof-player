@@ -1,7 +1,6 @@
-
 [
-  "The initial goal is to prove that 2 + 2 = 4 and the length of the list [1, 2, 3] is 3.",
-  "The constructor tactic splits the conjunction into two goals: 2 + 2 = 4 and [1, 2, 3].length = 3.",
-  "The left goal has been solved, and no goals remain in the extracted state.",
-  "The right goal has been solved, and no goals remain in the extracted state."
+  "The goal is a conjunction: we must prove both 2 + 2 = 4 and [1, 2, 3].length = 3.",
+  "constructor splits the ∧ into two separate goals, case left and case right, each proved on its own.",
+  "rfl closes the left goal, since 2 + 2 computes to 4. Only the right goal is left.",
+  "rfl closes the right goal too, since the list has three elements: proof complete."
 ]
