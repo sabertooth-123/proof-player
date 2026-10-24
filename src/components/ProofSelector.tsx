@@ -1,4 +1,6 @@
-import type { ProofTrace } from "../types/proof";
+import type { ProofTrace, VizKind } from "../types/proof";
+
+const PICTURE: Record<VizKind, string> = { list: "List view", graph: "Graph view", goal: "Goal view" };
 
 interface ProofSelectorProps {
   traces: ProofTrace[];
@@ -34,7 +36,12 @@ export default function ProofSelector({
       {traces.map(
         (trace) =>
           trace.id === selectedTraceId && (
-            <p key={trace.id}>{trace.description}</p>
+            <p key={trace.id}>
+              <span className="proof-meta">
+                {PICTURE[trace.viz]} · {trace.steps.length} steps{trace.id.startsWith("upload-") ? " · uploaded" : ""}
+              </span>{" "}
+              {trace.description}
+            </p>
           ),
       )}
     </section>

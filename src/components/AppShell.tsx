@@ -144,6 +144,9 @@ export default function AppShell({
             {transition && (
               <p className={`step-change step-change--${transition.kind}`} aria-live="polite">
                 <span className="step-change__label">What changed</span> {transition.summary.join(" ")}
+                {currentStepIndex === 0 && !playing && (
+                  <span className="step-change__hint"> Press Play, or → to run the first tactic.</span>
+                )}
               </p>
             )}
             {currentStep.explanation ? (
