@@ -24,6 +24,7 @@ register(
 );
 const { GoalPanel } = await import("../src/components/GoalPanel");
 const { VisualizationPanel } = await import("../src/components/VisualizationPanel");
+const { HowItWorks } = await import("../src/components/HowItWorks");
 
 const dir = new URL("../src/data/traces/", import.meta.url);
 const traces: ProofTrace[] = readdirSync(dir)
@@ -66,7 +67,7 @@ for (const t of traces) {
 }
 
 test("list view separates Current from Target", () => {
-  const t = traces.find((x) => x.id === "rev_three")!;
+  const t = traces.find((x) => x.id === "list_demo")!;
   const html = renderToStaticMarkup(<VisualizationPanel kind="list" goals={t.steps[1].goals} previous={t.steps[0].goals} />);
   assert.ok(html.includes("Current") && html.includes("Target") && html.includes("pp-divider"));
 });
@@ -89,5 +90,14 @@ test("the real app never imports the dev-only preview", () => {
   for (const f of ["../src/App.tsx", "../src/main.tsx", "../index.html"]) {
     const text = readFileSync(new URL(f, import.meta.url), "utf8");
     assert.ok(!/dev\/|M3Preview|devMain/.test(text), `${f} references dev code`);
+  }
+});
+
+test("HowItWorks: four boxes with three arrows, no props needed", () => {
+  const html = renderToStaticMarkup(<HowItWorks />);
+  assert.equal(html.split("pp-how-arrow").length - 1, 3);
+  assert.equal((html.match(/<li/g) ?? []).length, 7); // 4 boxes + 3 arrows
+  for (const t of ["Lean proof", "trace_state", "after every tactic", "real goals from", "lean --json", "picture computed from the goal"]) {
+    assert.ok(html.includes(t), t);
   }
 });
