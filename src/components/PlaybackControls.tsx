@@ -4,6 +4,8 @@ import { useEffect } from "react";
 interface PlaybackControlsProps {
   stepIndex: number;
   stepCount: number;
+  isPlaying: boolean;
+  onTogglePlay: () => void;
   onPrev: () => void;
   onNext: () => void;
   onReset: () => void;
@@ -12,6 +14,8 @@ interface PlaybackControlsProps {
 export default function PlaybackControls({
   stepIndex,
   stepCount,
+  isPlaying,
+  onTogglePlay,
   onPrev,
   onNext,
   onReset,
@@ -26,16 +30,18 @@ export default function PlaybackControls({
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
 
-      // Don't hijack arrow keys while the user is typing.
       if (
         target instanceof HTMLElement &&
         (target.isContentEditable ||
-          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
+          ["INPUT", "TEXTAREA", "SELECT", "BUTTON"].includes(target.tagName))
       ) {
         return;
       }
 
-      if (event.key === "ArrowLeft") {
+      if (event.code === "Space") {
+        event.preventDefault();
+        if (stepCount > 0) onTogglePlay();
+      } else if (event.key === "ArrowLeft") {
         event.preventDefault();
         onPrev();
       } else if (event.key === "ArrowRight") {
@@ -46,7 +52,7 @@ export default function PlaybackControls({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onPrev, onNext]);
+  }, [onPrev, onNext, onTogglePlay, stepCount]);
 
   return (
     <section className="playback-controls" aria-label="Proof playback">
@@ -57,6 +63,13 @@ export default function PlaybackControls({
 
         <button onClick={onReset} disabled={stepCount === 0}>
           Reset
+        </button>
+
+        <button
+          onClick={onTogglePlay}
+          disabled={stepCount === 0 || (!isPlaying && isLast)}
+        >
+          {isPlaying ? "Pause" : "Play"}
         </button>
 
         <button onClick={onNext} disabled={isLast}>
