@@ -1,30 +1,30 @@
-// Temporary harness: render <M3Preview /> from main.tsx to see M3's panels
-// before M2's player exists. Delete (or keep out of the build) once integrated.
+// DEV ONLY. Never imported by App.tsx / main.tsx; opened at /dev.html while `npm run dev`.
+// Lets M3 look at both panels on the real traces without waiting for M2's player.
 import { useState } from "react";
 import { GoalPanel } from "../components/GoalPanel";
 import { VisualizationPanel } from "../components/VisualizationPanel";
-import type { Goal, VizKind } from "../types/proof";
-import { mockGoal, mockGraph, mockList } from "./mockGoals";
-
-const SETS: Record<VizKind, Goal[][]> = { list: mockList, goal: mockGoal, graph: mockGraph };
+import { traces } from "../data/traces";
 
 export function M3Preview() {
-  const [kind, setKind] = useState<VizKind>("list");
+  const [t, setT] = useState(0);
   const [i, setI] = useState(0);
-  const steps = SETS[kind];
-  const prev = i > 0 ? steps[i - 1] : null;
+  const trace = traces[t];
+  const step = trace.steps[i];
+  const prev = i > 0 ? trace.steps[i - 1] : null;
+  const last = trace.steps.length - 1;
   return (
-    <div style={{ maxWidth: 760, margin: "24px auto", display: "grid", gap: 12, padding: 12 }}>
+    <div style={{ maxWidth: 760, margin: "24px auto", display: "grid", gap: 12, padding: 12, fontFamily: "system-ui, sans-serif" }}>
       <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        {(["list", "goal", "graph"] as VizKind[]).map((k) => (
-          <button key={k} onClick={() => { setKind(k); setI(0); }} disabled={k === kind}>{k}</button>
-        ))}
+        <select value={t} onChange={(e) => { setT(Number(e.target.value)); setI(0); }}>
+          {traces.map((x, k) => <option key={x.id} value={k}>{x.title} ({x.viz})</option>)}
+        </select>
         <button onClick={() => setI((n) => Math.max(0, n - 1))} disabled={i === 0}>Prev</button>
-        <button onClick={() => setI((n) => Math.min(steps.length - 1, n + 1))} disabled={i === steps.length - 1}>Next</button>
-        <span>step {i + 1} / {steps.length}</span>
+        <button onClick={() => setI((n) => Math.min(last, n + 1))} disabled={i === last}>Next</button>
+        <span>step {i} / {last}</span>
       </div>
-      <GoalPanel goals={steps[i]} previous={prev} isFinal={i === steps.length - 1} />
-      <VisualizationPanel kind={kind} goals={steps[i]} previous={prev} />
+      <code style={{ fontSize: 13 }}>line {step.line}: {step.tactic}</code>
+      <GoalPanel goals={step.goals} previous={prev?.goals ?? null} isFinal={i === last} />
+      <VisualizationPanel kind={trace.viz} goals={step.goals} previous={prev?.goals ?? null} />
     </div>
   );
 }

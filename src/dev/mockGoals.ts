@@ -35,10 +35,10 @@ export const mockGoal: Goal[][] = [
   [],
 ];
 
-const T = (a: number, b: number) => `Path [(1, 2), (2, 3), (3, 4)] ${a} ${b}`;
+// Same shape as the real graph_path trace: proved edges are hypotheses, target is `Reach E n 6`.
 export const mockGraph: Goal[][] = [
-  [g(T(1, 4))],
-  [g(T(2, 4), undefined, [["h1", "Edge (1, 2)"]])],
-  [g(T(3, 4), undefined, [["h1", "Edge (1, 2)"], ["h2", "Edge (2, 3)"]])],
+  [g("Reach E 1 6")],
+  [g("Reach E 2 6", undefined, [["h12", "(1, 2) ∈ E"]])],
+  [g("Reach E 5 6", undefined, [["h12", "(1, 2) ∈ E"], ["h25", "(2, 5) ∈ E"]])],
   [],
 ];

@@ -37,7 +37,7 @@ export interface ProofTrace {
 /** Owned by M3. Built only from goals, never from the step index. */
 export interface VizFrame {
   items?: { id: string; label: string; changed: boolean }[]; // list view
-  nodes?: { id: string; label: string }[]; // graph view
+  nodes?: { id: string; label: string; current?: boolean }[]; // current = where the proof is standing now // graph view
   edges?: { from: string; to: string; isNew: boolean }[];
 }
 
