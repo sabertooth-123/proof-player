@@ -8,8 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts",
-    "traces": "node scripts/extract-traces.mjs"
+    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts tests/lean-api.test.ts",
+    "traces": "node scripts/extract-traces.mjs",
+    "space": "node scripts/build-space.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
