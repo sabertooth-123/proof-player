@@ -1,20 +1,32 @@
-import { traces } from './data/traces'
 
-// Hour 0 smoke screen: proves traces load. M2 replaces this with AppShell.
+import AppShell from "./components/AppShell";
+import { useProofPlayer } from "./hooks/useProofPlayer";
+
 function App() {
+  const player = useProofPlayer();
+
+  if (!player.selectedTrace || !player.currentStep) {
+    return (
+      <main className="app-shell">
+        <h1>Proof Player</h1>
+        <p>No proof traces are available.</p>
+      </main>
+    );
+  }
+
   return (
-    <main style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Proof Player</h1>
-      <p>{traces.length} traces loaded</p>
-      <ul>
-        {traces.map((t) => (
-          <li key={t.id}>
-            <strong>{t.title}</strong> ({t.viz}, {t.steps.length} steps) — Lean {t.provenance.lean}
-          </li>
-        ))}
-      </ul>
-    </main>
-  )
+    <AppShell
+      traces={player.traces}
+      selectedTrace={player.selectedTrace}
+      currentStepIndex={player.state.stepIndex}
+      currentStep={player.currentStep}
+      previousGoals={player.previousStep?.goals ?? null}
+      onSelectTrace={player.selectTrace}
+      onNext={player.next}
+      onPrev={player.prev}
+      onReset={player.reset}
+    />
+  );
 }
 
-export default App
+export default App;
