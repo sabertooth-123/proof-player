@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { GoalPanel } from "../components/GoalPanel";
 import { VisualizationPanel } from "../components/VisualizationPanel";
+import { HowItWorks } from "../components/HowItWorks";
 import { traces } from "../data/traces";
+
+const card = { padding: 20, border: "1px solid #293650", borderRadius: 14, background: "#111827" };
 
 export function M3Preview() {
   const [t, setT] = useState(0);
@@ -23,8 +26,13 @@ export function M3Preview() {
         <span>step {i} / {last}</span>
       </div>
       <code style={{ fontSize: 13 }}>line {step.line}: {step.tactic}</code>
-      <GoalPanel goals={step.goals} previous={prev?.goals ?? null} isFinal={i === last} />
-      <VisualizationPanel kind={trace.viz} goals={step.goals} previous={prev?.goals ?? null} />
+      <HowItWorks />
+      <div style={card}>
+        <GoalPanel goals={step.goals} previous={prev?.goals ?? null} isFinal={i === last} />
+      </div>
+      <div style={card}>
+        <VisualizationPanel kind={trace.viz} goals={step.goals} previous={prev?.goals ?? null} />
+      </div>
     </div>
   );
 }
