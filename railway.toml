@@ -1,0 +1,13 @@
+# Railway: runs the public Lean server (lean-server/) for the live site's "Open .lean file".
+# Railway injects PORT; the server listens on it. The site itself stays on Vercel.
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "lean-server/Dockerfile"
+# Rebuild only when the server's own files change, not on every app commit.
+watchPatterns = ["lean-server/**", "scripts/extract-traces.mjs", "scripts/lean-api.mjs", "railway.toml", ".dockerignore"]
+
+[deploy]
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5

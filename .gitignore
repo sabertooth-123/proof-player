@@ -25,3 +25,4 @@ dist-ssr
 
 # npm run space (files to upload to the Hugging Face Space)
 space/
+proof-player-lean-space.zip
