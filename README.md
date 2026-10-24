@@ -37,6 +37,16 @@ You do not need Lean to run the app: the traces are committed JSON.
 - **Show raw Lean output** swaps the parsed goals for Lean's own `trace_state` text at that step.
 - The active line is highlighted in the code; the tactic and a one-sentence explanation sit under the controls.
 
+## Open your own .lean file (local, needs Lean)
+
+Run `npm run dev` on a machine with Lean (elan) installed. The **Lean Source** panel then shows **Open .lean file**, and you can also drag a `.lean` file anywhere onto the page.
+
+The dev server runs the same extractor on it with your local Lean (`trace_state` after every tactic, `lean --json`, parse), and the proof opens at step 1, marked "(uploaded)". The picture is picked from the goals: number pairs give a graph, lists on both sides of `=` give the list view, anything else shows the open goals. If Lean rejects the file, its error is shown with the line number in your file.
+
+- Same rules as the samples: one theorem per file, one tactic per line, core Lean only (no Mathlib). One-line alternatives like `| zero => rfl` are fine.
+- Uploaded proofs live until you reload the page; to keep one, add it to `samples/` and run `npm run traces`.
+- The live demo is a static site with no Lean on the server, so the button doesn't appear there.
+
 ## Checks
 
 ```bash
@@ -83,7 +93,7 @@ To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }
 
 - One theorem per file, and it must compile with `lean samples/<id>.lean`.
 - One tactic per line. A tactic split across lines is rejected.
-- `induction x with` / `cases x with` are fine; the `| case =>` lines become steps.
+- `induction x with` / `cases x with` are fine; the `| case =>` lines become steps. A one-line `| case => tac` becomes two steps (the case's goal, then after `tac`).
 - `·` bullets are fine.
 - If the explanations file exists, its sentence count must equal the step count (the script tells you the count). Each sentence describes the state after its line runs.
 

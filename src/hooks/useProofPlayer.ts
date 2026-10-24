@@ -1,10 +1,14 @@
-import { useCallback, useState } from "react";
-import { traces } from "../data/traces";
+import { useCallback, useMemo, useState } from "react";
+import { traces as builtIn } from "../data/traces";
 import type { PlayerState, ProofTrace } from "../types/proof";
 
 export function useProofPlayer() {
+  // Proofs opened from a .lean file this session (dev server only), newest first.
+  const [uploaded, setUploaded] = useState<ProofTrace[]>([]);
+  const traces = useMemo(() => [...uploaded, ...builtIn], [uploaded]);
+
   const [state, setState] = useState<PlayerState>(() => ({
-    traceId: traces[0]?.id ?? "",
+    traceId: builtIn[0]?.id ?? "",
     stepIndex: 0,
   }));
 
@@ -29,7 +33,7 @@ export function useProofPlayer() {
         stepIndex: Math.min(previous.stepIndex + 1, lastIndex),
       };
     });
-  }, []);
+  }, [traces]);
 
   const prev = useCallback(() => {
     setState((previous) => ({
@@ -47,6 +51,12 @@ export function useProofPlayer() {
     if (!exists) return;
 
     setState({ traceId, stepIndex: 0 });
+  }, [traces]);
+
+  /** Adds a proof extracted from an uploaded file and opens it at step 1. */
+  const addTrace = useCallback((trace: ProofTrace) => {
+    setUploaded((previous) => [trace, ...previous]);
+    setState({ traceId: trace.id, stepIndex: 0 });
   }, []);
 
   return {
@@ -60,5 +70,6 @@ export function useProofPlayer() {
     prev,
     reset,
     selectTrace,
+    addTrace,
   };
 }

@@ -1,11 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 interface CodeViewerProps {
   source: string;
   activeLine: number;
+  headerAction?: ReactNode; // shown at the right of the "Lean Source" heading
 }
 
-export default function CodeViewer({ source, activeLine }: CodeViewerProps) {
+export default function CodeViewer({ source, activeLine, headerAction }: CodeViewerProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const activeLineRef = useRef<HTMLDivElement>(null);
   const lines = source.split(/\r?\n/);
@@ -24,7 +25,10 @@ export default function CodeViewer({ source, activeLine }: CodeViewerProps) {
 
   return (
     <section className="code-viewer">
-      <h2>Lean Source</h2>
+      <div className="code-viewer__head">
+        <h2>Lean Source</h2>
+        {headerAction}
+      </div>
 
       <div className="code-viewer__content" ref={contentRef}>
         {lines.map((line, index) => {

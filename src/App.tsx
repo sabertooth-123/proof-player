@@ -24,6 +24,7 @@ function App() {
       onNext={player.next}
       onPrev={player.prev}
       onReset={player.reset}
+      onAddTrace={player.addTrace}
     />
   );
 }
