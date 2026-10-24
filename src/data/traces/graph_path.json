@@ -1,8 +1,8 @@
 {
   "id": "graph_path",
-  "title": "Growing a path graph",
-  "description": "A path is built one edge at a time; each proof step adds an edge established by the current goal.",
-  "source": "\n\n\ninductive Reach : Nat → Nat → Prop where\n  | edge12 : Reach 1 2\n  | edge23 : Reach 2 3\n  | edge34 : Reach 3 4\n  | edge45 : Reach 4 5\n  | edge56 : Reach 5 6\n  | trans {a b c : Nat} : Reach a b → Reach b c → Reach a c\n\ntheorem path_1_to_6 : Reach 1 6 := by\n  apply Reach.trans\n  · exact Reach.edge12\n  · apply Reach.trans\n    · exact Reach.edge23\n    · apply Reach.trans\n      · exact Reach.edge34\n      · apply Reach.trans\n        · exact Reach.edge45\n        · exact Reach.edge56\n",
+  "title": "Finding a path in a graph",
+  "description": "Each step proves one edge is in the graph and walks along it; the path 1 → 2 → 5 → 6 grows edge by edge.",
+  "source": "def E : List (Nat × Nat) := [(1, 2), (2, 3), (3, 4), (4, 6), (2, 5), (5, 6)]\n\ninductive Reach (E : List (Nat × Nat)) : Nat → Nat → Prop\n  | refl (a : Nat) : Reach E a a\n  | step {a b c : Nat} : (a, b) ∈ E → Reach E b c → Reach E a c\n\ntheorem path_1_6 : Reach E 1 6 := by\n  have h12 : (1, 2) ∈ E := by decide\n  apply Reach.step h12\n  have h25 : (2, 5) ∈ E := by decide\n  apply Reach.step h25\n  have h56 : (5, 6) ∈ E := by decide\n  apply Reach.step h56\n  exact Reach.refl 6\n",
   "viz": "graph",
   "provenance": {
     "lean": "4.35.0",
@@ -11,142 +11,172 @@
   "steps": [
     {
       "index": 0,
-      "line": 12,
-      "tactic": "theorem path_1_to_6 : Reach 1 6 := by",
+      "line": 7,
+      "tactic": "theorem path_1_6 : Reach E 1 6 := by",
       "goals": [
         {
           "hypotheses": [],
-          "target": "Reach 1 6"
+          "target": "Reach E 1 6"
         }
       ],
-      "explanation": "The initial goal is to prove that there is a path from node 1 to node 6."
+      "explanation": "The goal: show there is a path from node 1 to node 6 in the graph E."
     },
     {
       "index": 1,
-      "line": 13,
-      "tactic": "apply Reach.trans",
+      "line": 8,
+      "tactic": "have h12 : (1, 2) ∈ E := by decide",
       "goals": [
         {
-          "caseName": "a",
-          "hypotheses": [],
-          "target": "Reach 1 ?b"
-        },
-        {
-          "caseName": "a",
-          "hypotheses": [],
-          "target": "Reach ?b 6"
-        },
-        {
-          "caseName": "b",
-          "hypotheses": [],
-          "target": "Nat"
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            }
+          ],
+          "target": "Reach E 1 6"
         }
       ],
-      "explanation": "Reach.trans splits the path goal into two reachability goals with an intermediate node, while Lean also displays a type-inference goal."
+      "explanation": "First we check that the edge 1 → 2 is in E; it becomes the hypothesis h12."
     },
     {
       "index": 2,
-      "line": 14,
-      "tactic": "· exact Reach.edge12",
-      "goals": [],
-      "explanation": "The edge from node 1 to node 2 is established, so the first reachability goal is solved."
+      "line": 9,
+      "tactic": "apply Reach.step h12",
+      "goals": [
+        {
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            }
+          ],
+          "target": "Reach E 2 6"
+        }
+      ],
+      "explanation": "Taking that edge moves us forward: now we need a path from 2 to 6."
     },
     {
       "index": 3,
-      "line": 15,
-      "tactic": "· apply Reach.trans",
+      "line": 10,
+      "tactic": "have h25 : (2, 5) ∈ E := by decide",
       "goals": [
         {
-          "caseName": "a.a",
-          "hypotheses": [],
-          "target": "Reach 2 ?a.b✝"
-        },
-        {
-          "caseName": "a.a",
-          "hypotheses": [],
-          "target": "Reach ?a.b✝ 6"
-        },
-        {
-          "caseName": "a.b",
-          "hypotheses": [],
-          "target": "Nat"
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            },
+            {
+              "names": [
+                "h25"
+              ],
+              "type": "(2, 5) ∈ E"
+            }
+          ],
+          "target": "Reach E 2 6"
         }
       ],
-      "explanation": "The remaining path is split again, asking for a path from node 2 to an intermediate node and then from that node to node 6."
+      "explanation": "Next, the edge 2 → 5 is in E. It is a shortcut that skips nodes 3 and 4."
     },
     {
       "index": 4,
-      "line": 16,
-      "tactic": "· exact Reach.edge23",
-      "goals": [],
-      "explanation": "The edge from node 2 to node 3 is established, solving the current first reachability goal."
+      "line": 11,
+      "tactic": "apply Reach.step h25",
+      "goals": [
+        {
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            },
+            {
+              "names": [
+                "h25"
+              ],
+              "type": "(2, 5) ∈ E"
+            }
+          ],
+          "target": "Reach E 5 6"
+        }
+      ],
+      "explanation": "Taking it leaves a path from 5 to 6 to find."
     },
     {
       "index": 5,
-      "line": 17,
-      "tactic": "· apply Reach.trans",
+      "line": 12,
+      "tactic": "have h56 : (5, 6) ∈ E := by decide",
       "goals": [
         {
-          "caseName": "a.a.a",
-          "hypotheses": [],
-          "target": "Reach 3 ?a.a.b✝"
-        },
-        {
-          "caseName": "a.a.a",
-          "hypotheses": [],
-          "target": "Reach ?a.a.b✝ 6"
-        },
-        {
-          "caseName": "a.a.b",
-          "hypotheses": [],
-          "target": "Nat"
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            },
+            {
+              "names": [
+                "h25"
+              ],
+              "type": "(2, 5) ∈ E"
+            },
+            {
+              "names": [
+                "h56"
+              ],
+              "type": "(5, 6) ∈ E"
+            }
+          ],
+          "target": "Reach E 5 6"
         }
       ],
-      "explanation": "The remaining path is split again, introducing another intermediate node before reaching node 6."
+      "explanation": "The edge 5 → 6 is in E as well."
     },
     {
       "index": 6,
-      "line": 18,
-      "tactic": "· exact Reach.edge34",
-      "goals": [],
-      "explanation": "The edge from node 3 to node 4 is established, solving the current first reachability goal."
+      "line": 13,
+      "tactic": "apply Reach.step h56",
+      "goals": [
+        {
+          "hypotheses": [
+            {
+              "names": [
+                "h12"
+              ],
+              "type": "(1, 2) ∈ E"
+            },
+            {
+              "names": [
+                "h25"
+              ],
+              "type": "(2, 5) ∈ E"
+            },
+            {
+              "names": [
+                "h56"
+              ],
+              "type": "(5, 6) ∈ E"
+            }
+          ],
+          "target": "Reach E 6 6"
+        }
+      ],
+      "explanation": "Taking it lands us on node 6, so all that is left is a path from 6 to itself."
     },
     {
       "index": 7,
-      "line": 19,
-      "tactic": "· apply Reach.trans",
-      "goals": [
-        {
-          "caseName": "a.a.a.a",
-          "hypotheses": [],
-          "target": "Reach 4 ?a.a.a.b✝"
-        },
-        {
-          "caseName": "a.a.a.a",
-          "hypotheses": [],
-          "target": "Reach ?a.a.a.b✝ 6"
-        },
-        {
-          "caseName": "a.a.a.b",
-          "hypotheses": [],
-          "target": "Nat"
-        }
-      ],
-      "explanation": "The remaining path is split again, extending the chain toward node 6."
-    },
-    {
-      "index": 8,
-      "line": 20,
-      "tactic": "· exact Reach.edge45",
+      "line": 14,
+      "tactic": "exact Reach.refl 6",
       "goals": [],
-      "explanation": "The edge from node 4 to node 5 is established, solving the current first reachability goal."
-    },
-    {
-      "index": 9,
-      "line": 21,
-      "tactic": "· exact Reach.edge56",
-      "goals": [],
-      "explanation": "The final edge from node 5 to node 6 completes the path from node 1 to node 6."
+      "explanation": "Every node reaches itself, so the path 1 → 2 → 5 → 6 is complete."
     }
   ]
 }
