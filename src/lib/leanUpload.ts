@@ -20,11 +20,12 @@ async function probe(): Promise<string | null> {
 
 /**
  * Lean version if a Lean server is reachable, otherwise null. Never throws.
- * A sleeping Hugging Face Space takes up to a few minutes to wake, so keep trying.
+ * The live server is a tunnel to a laptop (npm run live): it's either up or not, so one
+ * retry covers a slow first connection without filling the console when it's off.
  */
 export async function leanVersion(): Promise<string | null> {
   if (!ENABLED) return null;
-  const attempts = import.meta.env.DEV ? 1 : 12;
+  const attempts = import.meta.env.DEV ? 1 : 2;
   for (let i = 0; i < attempts; i++) {
     const version = await probe();
     if (version) return version;

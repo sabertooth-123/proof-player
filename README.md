@@ -48,11 +48,22 @@ The dev server runs the same extractor on it with your local Lean (`trace_state`
 
 ### On the live site
 
-Vercel can't run Lean (its 250 MB function limit is smaller than Lean's core runtime), so the live site sends uploads to a small Lean server on a Hugging Face Space (`lean-server/`, Docker, Lean 4.35.0). The site is built with its address in `VITE_LEAN_API` (`.env.production`); without it the button stays hidden.
+Vercel can't run Lean (its 250 MB function limit is smaller than Lean's core runtime), so the live site sends uploads to a separate Lean server (`lean-server/server.mjs`). The site is built with its address in `VITE_LEAN_API` (`.env.production`); when that server is down the button just doesn't appear and everything else works.
+
+**Right now it runs on a team laptop**, through a Cloudflare quick tunnel (no account needed):
+
+```bash
+npm run live        # start the Lean server + tunnel, push the new address (Vercel redeploys in ~1 min)
+npm run live:stop   # stop both
+```
+
+Upload on the live site works only while that laptop is on, awake and online with `npm run live` running. Each run gets a new `*.trycloudflare.com` address, which the script commits to `.env.production` on `main`. Needs `cloudflared` at `%USERPROFILE%\tools\cloudflared\cloudflared.exe` (or set `CLOUDFLARED`). Logs are in `.live/`.
+
+To host it permanently instead, `lean-server/Dockerfile` (Lean 4.35.0) runs on any Docker host: a Hugging Face Space (`npm run space` builds the upload folder) or Railway (`railway.toml`).
 
 The public server is stricter than the dev server: only `theorem`/`lemma`/`example`/`def`/`inductive`/`structure`/`namespace`/`open` at top level, no `#` commands, `import`, IO, custom syntax or raised limits, 50 KB per file, 20 s of Lean time, 15 uploads per minute per client, and only this site may call it from a browser.
 
-To update the Space: `npm run space`, then upload the contents of `space/` to it (keep the folders). To test the image locally: `docker build -f lean-server/Dockerfile -t proof-player-lean .` and `docker run --rm -p 7860:7860 proof-player-lean`.
+To test the image locally: `docker build -f lean-server/Dockerfile -t proof-player-lean .` and `docker run --rm -p 7860:7860 proof-player-lean`.
 
 ## Checks
 
