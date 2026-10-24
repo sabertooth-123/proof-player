@@ -15,6 +15,7 @@ samples/*.lean  ──►  insert trace_state after every tactic  ──►  lea
 ```
 
 - `scripts/extract-traces.mjs` inserts Lean's `trace_state` tactic after each line, runs `lean --json`, and parses the goal text Lean prints (hypotheses, `⊢` target, `case` names).
+- Each step also keeps Lean's text verbatim. **Show raw Lean output** in the Goals panel displays it, and `npm test` checks that the parsed goals match it exactly.
 - Every trace records the Lean version it was extracted with, shown in the app under the goal panel.
 - Each picture is computed from the goal text alone, never from the step number. If Lean's goal changes, the picture changes.
 - Change a sample, rerun `npm run traces`, and the app shows Lean's new answer.
@@ -28,14 +29,24 @@ npm run dev
 
 You do not need Lean to run the app: the traces are committed JSON.
 
-Keys: `←` / `→` step back and forward.
+## Using it
+
+- Pick a proof from **Select a proof**.
+- **Prev / Next** or `←` / `→` step back and forward; **Reset** goes to the start.
+- **Play** (or `Space`) steps once a second and stops at the end; any other control pauses it.
+- **Show raw Lean output** swaps the parsed goals for Lean's own `trace_state` text at that step.
+- The active line is highlighted in the code; the tactic and a one-sentence explanation sit under the controls.
 
 ## Checks
 
 ```bash
 npm run build   # type-check and production build
-npm test        # derivers on real traces + both panels rendered at every step of every proof
+npm test        # derivers on real traces, both panels at every step of every proof,
+                # and every trace's goals re-parsed from Lean's raw output
+npm run lint
 ```
+
+GitHub Actions runs all three on every pull request and push to `main` (`.github/workflows/ci.yml`). Vercel deploys `main` straight to the live demo, so merge only green PRs.
 
 ## Regenerating traces (needs Lean)
 
@@ -64,7 +75,7 @@ To add a sample: write `samples/<id>.lean`, add `{ id, title, description, viz }
 
 ## Team rules
 
-- `main` always runs; `npm run build` and `npm test` must pass before every merge.
+- `main` always runs; `npm run build` and `npm test` must pass before every merge (CI shows a red ✗ on the PR if not).
 - Work on a branch from a fresh `main`, open a PR, and only edit your own files.
 - Save files from the editor, not with PowerShell `>` (it writes UTF-16).
 
