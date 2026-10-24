@@ -13,8 +13,8 @@
   },
   {
     "id": "graph_path",
-    "title": "Growing a path graph",
-    "description": "A path is built one edge at a time; each proof step adds an edge established by the current goal.",
+    "title": "Finding a path in a graph",
+    "description": "Each step proves one edge is in the graph and walks along it; the path 1 → 2 → 5 → 6 grows edge by edge.",
     "viz": "graph"
   }
 ]

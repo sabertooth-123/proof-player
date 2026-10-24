@@ -1,21 +1,14 @@
+def E : List (Nat × Nat) := [(1, 2), (2, 3), (3, 4), (4, 6), (2, 5), (5, 6)]
 
+inductive Reach (E : List (Nat × Nat)) : Nat → Nat → Prop
+  | refl (a : Nat) : Reach E a a
+  | step {a b c : Nat} : (a, b) ∈ E → Reach E b c → Reach E a c
 
-
-inductive Reach : Nat → Nat → Prop where
-  | edge12 : Reach 1 2
-  | edge23 : Reach 2 3
-  | edge34 : Reach 3 4
-  | edge45 : Reach 4 5
-  | edge56 : Reach 5 6
-  | trans {a b c : Nat} : Reach a b → Reach b c → Reach a c
-
-theorem path_1_to_6 : Reach 1 6 := by
-  apply Reach.trans
-  · exact Reach.edge12
-  · apply Reach.trans
-    · exact Reach.edge23
-    · apply Reach.trans
-      · exact Reach.edge34
-      · apply Reach.trans
-        · exact Reach.edge45
-        · exact Reach.edge56
+theorem path_1_6 : Reach E 1 6 := by
+  have h12 : (1, 2) ∈ E := by decide
+  apply Reach.step h12
+  have h25 : (2, 5) ∈ E := by decide
+  apply Reach.step h25
+  have h56 : (5, 6) ∈ E := by decide
+  apply Reach.step h56
+  exact Reach.refl 6

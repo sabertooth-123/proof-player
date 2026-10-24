@@ -1,13 +1,10 @@
-
 [
-  "The initial goal is to prove that there is a path from node 1 to node 6.",
-  "Reach.trans splits the path goal into two reachability goals with an intermediate node, while Lean also displays a type-inference goal.",
-  "The edge from node 1 to node 2 is established, so the first reachability goal is solved.",
-  "The remaining path is split again, asking for a path from node 2 to an intermediate node and then from that node to node 6.",
-  "The edge from node 2 to node 3 is established, solving the current first reachability goal.",
-  "The remaining path is split again, introducing another intermediate node before reaching node 6.",
-  "The edge from node 3 to node 4 is established, solving the current first reachability goal.",
-  "The remaining path is split again, extending the chain toward node 6.",
-  "The edge from node 4 to node 5 is established, solving the current first reachability goal.",
-  "The final edge from node 5 to node 6 completes the path from node 1 to node 6."
+  "The goal: show there is a path from node 1 to node 6 in the graph E.",
+  "First we check that the edge 1 → 2 is in E; it becomes the hypothesis h12.",
+  "Taking that edge moves us forward: now we need a path from 2 to 6.",
+  "Next, the edge 2 → 5 is in E. It is a shortcut that skips nodes 3 and 4.",
+  "Taking it leaves a path from 5 to 6 to find.",
+  "The edge 5 → 6 is in E as well.",
+  "Taking it lands us on node 6, so all that is left is a path from 6 to itself.",
+  "Every node reaches itself, so the path 1 → 2 → 5 → 6 is complete."
 ]
