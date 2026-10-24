@@ -7,8 +7,8 @@ interface LeanFileOpenerProps {
 }
 
 /**
- * "Open .lean file" button plus drag-and-drop anywhere on the page. Only shown when the
- * server can run Lean (npm run dev on a machine with Lean); the static site never shows it.
+ * "Open .lean file" button plus drag-and-drop anywhere on the page. Only shown once a Lean
+ * server answers: the dev server's own Lean, or the public one the live site is built with.
  */
 export default function LeanFileOpener({ onLoaded }: LeanFileOpenerProps) {
   const [version, setVersion] = useState<string | null>(null);
@@ -88,7 +88,7 @@ export default function LeanFileOpener({ onLoaded }: LeanFileOpenerProps) {
           className="lean-opener__button"
           disabled={busy !== null}
           onClick={() => inputRef.current?.click()}
-          title={`Runs the file through Lean ${version} on this machine`}
+          title={`Runs the file through Lean ${version} ${import.meta.env.DEV ? "on this machine" : "on the Proof Player server"}`}
         >
           {busy ? "Running Lean…" : "Open .lean file"}
         </button>

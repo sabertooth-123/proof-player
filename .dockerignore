@@ -1,0 +1,5 @@
+# The Lean server image only needs these (see lean-server/Dockerfile).
+*
+!scripts/extract-traces.mjs
+!scripts/lean-api.mjs
+!lean-server/server.mjs

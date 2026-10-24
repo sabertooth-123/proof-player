@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# npm run space (files to upload to the Hugging Face Space)
+space/

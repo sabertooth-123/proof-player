@@ -45,7 +45,14 @@ The dev server runs the same extractor on it with your local Lean (`trace_state`
 
 - Same rules as the samples: one theorem per file, one tactic per line, core Lean only (no Mathlib). One-line alternatives like `| zero => rfl` are fine.
 - Uploaded proofs live until you reload the page; to keep one, add it to `samples/` and run `npm run traces`.
-- The live demo is a static site with no Lean on the server, so the button doesn't appear there.
+
+### On the live site
+
+Vercel can't run Lean (its 250 MB function limit is smaller than Lean's core runtime), so the live site sends uploads to a small Lean server on a Hugging Face Space (`lean-server/`, Docker, Lean 4.35.0). The site is built with its address in `VITE_LEAN_API` (`.env.production`); without it the button stays hidden.
+
+The public server is stricter than the dev server: only `theorem`/`lemma`/`example`/`def`/`inductive`/`structure`/`namespace`/`open` at top level, no `#` commands, `import`, IO, custom syntax or raised limits, 50 KB per file, 20 s of Lean time, 15 uploads per minute per client, and only this site may call it from a browser.
+
+To update the Space: `npm run space`, then upload the contents of `space/` to it (keep the folders). To test the image locally: `docker build -f lean-server/Dockerfile -t proof-player-lean .` and `docker run --rm -p 7860:7860 proof-player-lean`.
 
 ## Checks
 
