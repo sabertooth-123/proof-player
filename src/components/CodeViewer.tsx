@@ -19,7 +19,9 @@ export default function CodeViewer({ source, activeLine, headerAction }: CodeVie
     if (!box || !line) return;
     const top = line.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
     if (top < box.scrollTop || top + line.offsetHeight > box.scrollTop + box.clientHeight) {
-      box.scrollTo({ top: top - box.clientHeight / 2, behavior: "smooth" });
+      // Instant: a smooth scroll gets cut short when steps come quickly (Play, held arrow key)
+      // and can leave the highlighted line off screen.
+      box.scrollTo({ top: top - box.clientHeight / 2 });
     }
   }, [activeLine, source]);
 
