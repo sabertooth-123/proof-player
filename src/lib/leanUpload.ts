@@ -5,6 +5,8 @@ import type { ProofTrace } from "../types/proof";
 
 /** Lean version if this server can run Lean, otherwise null. Never throws. */
 export async function leanVersion(): Promise<string | null> {
+  // The endpoints exist only under `npm run dev`; don't probe (and log a 404) on the static site.
+  if (!import.meta.env.DEV) return null;
   try {
     const res = await fetch("./api/lean");
     if (!res.ok || !res.headers.get("content-type")?.includes("application/json")) return null;
