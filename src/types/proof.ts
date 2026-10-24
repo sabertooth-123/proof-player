@@ -20,6 +20,7 @@ export interface ProofStep {
   tactic: string; // that line's text, trimmed
   goals: Goal[]; // [] = this branch (or the whole proof) is closed
   explanation: string; // human-written, from explanations/<id>.json
+  raw?: string; // exactly what Lean's trace_state printed after this line ("" = no goals); `goals` is parsed from it
 }
 
 export type VizKind = "list" | "graph" | "goal";

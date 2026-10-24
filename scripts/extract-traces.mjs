@@ -189,12 +189,14 @@ export function extract(meta, version, today) {
     provenance: { lean: version, extractedAt: today },
     steps: steps.map((s, index) => {
       if (!traces.has(s.instrLine)) throw new ExtractError(`no trace output for line ${s.origLine} ("${s.tactic}")`);
+      const raw = traces.get(s.instrLine);
       return {
         index,
         line: s.origLine,
         tactic: s.tactic,
-        goals: parseGoals(traces.get(s.instrLine)),
+        goals: parseGoals(raw),
         explanation: explanations?.[index] ?? "",
+        raw, // kept verbatim so the app can show Lean's own words next to the parsed goals
       };
     }),
   };

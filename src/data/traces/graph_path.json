@@ -19,7 +19,8 @@
           "target": "Reach E 1 6"
         }
       ],
-      "explanation": "The goal: show there is a path from node 1 to node 6 in the graph E."
+      "explanation": "The goal: show there is a path from node 1 to node 6 in the graph E.",
+      "raw": "⊢ Reach E 1 6"
     },
     {
       "index": 1,
@@ -38,7 +39,8 @@
           "target": "Reach E 1 6"
         }
       ],
-      "explanation": "First we check that the edge 1 → 2 is in E; it becomes the hypothesis h12."
+      "explanation": "First we check that the edge 1 → 2 is in E; it becomes the hypothesis h12.",
+      "raw": "h12 : (1, 2) ∈ E\n⊢ Reach E 1 6"
     },
     {
       "index": 2,
@@ -57,7 +59,8 @@
           "target": "Reach E 2 6"
         }
       ],
-      "explanation": "Taking that edge moves us forward: now we need a path from 2 to 6."
+      "explanation": "Taking that edge moves us forward: now we need a path from 2 to 6.",
+      "raw": "h12 : (1, 2) ∈ E\n⊢ Reach E 2 6"
     },
     {
       "index": 3,
@@ -82,7 +85,8 @@
           "target": "Reach E 2 6"
         }
       ],
-      "explanation": "Next, the edge 2 → 5 is in E. It is a shortcut that skips nodes 3 and 4."
+      "explanation": "Next, the edge 2 → 5 is in E. It is a shortcut that skips nodes 3 and 4.",
+      "raw": "h12 : (1, 2) ∈ E\nh25 : (2, 5) ∈ E\n⊢ Reach E 2 6"
     },
     {
       "index": 4,
@@ -107,7 +111,8 @@
           "target": "Reach E 5 6"
         }
       ],
-      "explanation": "Taking it leaves a path from 5 to 6 to find."
+      "explanation": "Taking it leaves a path from 5 to 6 to find.",
+      "raw": "h12 : (1, 2) ∈ E\nh25 : (2, 5) ∈ E\n⊢ Reach E 5 6"
     },
     {
       "index": 5,
@@ -138,7 +143,8 @@
           "target": "Reach E 5 6"
         }
       ],
-      "explanation": "The edge 5 → 6 is in E as well."
+      "explanation": "The edge 5 → 6 is in E as well.",
+      "raw": "h12 : (1, 2) ∈ E\nh25 : (2, 5) ∈ E\nh56 : (5, 6) ∈ E\n⊢ Reach E 5 6"
     },
     {
       "index": 6,
@@ -169,14 +175,16 @@
           "target": "Reach E 6 6"
         }
       ],
-      "explanation": "Taking it lands us on node 6, so all that is left is a path from 6 to itself."
+      "explanation": "Taking it lands us on node 6, so all that is left is a path from 6 to itself.",
+      "raw": "h12 : (1, 2) ∈ E\nh25 : (2, 5) ∈ E\nh56 : (5, 6) ∈ E\n⊢ Reach E 6 6"
     },
     {
       "index": 7,
       "line": 14,
       "tactic": "exact Reach.refl 6",
       "goals": [],
-      "explanation": "Every node reaches itself, so the path 1 → 2 → 5 → 6 is complete."
+      "explanation": "Every node reaches itself, so the path 1 → 2 → 5 → 6 is complete.",
+      "raw": ""
     }
   ]
 }

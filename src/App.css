@@ -130,6 +130,68 @@ body {
   font-weight: 700;
 }
 
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.panel-head h2 {
+  margin-bottom: 0;
+}
+
+.raw-toggle {
+  padding: 4px 10px;
+  border: 1px solid #3b4a65;
+  border-radius: 999px;
+  background: #1a2438;
+  color: #c6d0e2;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.raw-toggle:hover {
+  border-color: #70c779;
+}
+
+.raw-toggle[aria-pressed="true"] {
+  border-color: #70c779;
+  color: #8ee3a0;
+}
+
+.raw-toggle:focus-visible {
+  outline: 2px solid #70c779;
+  outline-offset: 2px;
+}
+
+.raw-lean__caption {
+  margin-bottom: 8px;
+  color: #a5b1c8;
+  font-size: 0.85rem;
+}
+
+.raw-lean__caption code {
+  font-family: "Cascadia Code", Consolas, monospace;
+  color: #e2eaff;
+}
+
+.raw-lean__text {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #33435e;
+  border-radius: 8px;
+  background: #0d1525;
+  color: #e2eaff;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .provenance {
   margin-top: 12px;
   padding-top: 8px;

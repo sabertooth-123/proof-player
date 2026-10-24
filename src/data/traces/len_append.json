@@ -27,7 +27,8 @@
           "target": "(xs ++ ys).length = xs.length + ys.length"
         }
       ],
-      "explanation": "The statement to prove: appending two lists adds their lengths."
+      "explanation": "The statement to prove: appending two lists adds their lengths.",
+      "raw": "xs ys : List Nat\n⊢ (xs ++ ys).length = xs.length + ys.length"
     },
     {
       "index": 1,
@@ -47,14 +48,16 @@
           "target": "([] ++ ys).length = [].length + ys.length"
         }
       ],
-      "explanation": "Induction on xs. First case: xs is the empty list."
+      "explanation": "Induction on xs. First case: xs is the empty list.",
+      "raw": "case nil\nys : List Nat\n⊢ ([] ++ ys).length = [].length + ys.length"
     },
     {
       "index": 2,
       "line": 4,
       "tactic": "simp",
       "goals": [],
-      "explanation": "Both sides simplify to ys.length, so the nil case closes."
+      "explanation": "Both sides simplify to ys.length, so the nil case closes.",
+      "raw": ""
     },
     {
       "index": 3,
@@ -92,7 +95,8 @@
           "target": "(x :: xs ++ ys).length = (x :: xs).length + ys.length"
         }
       ],
-      "explanation": "Second case: xs is x :: xs, and we get the induction hypothesis ih for the shorter list."
+      "explanation": "Second case: xs is x :: xs, and we get the induction hypothesis ih for the shorter list.",
+      "raw": "case cons\nys : List Nat\nx : Nat\nxs : List Nat\nih : (xs ++ ys).length = xs.length + ys.length\n⊢ (x :: xs ++ ys).length = (x :: xs).length + ys.length"
     },
     {
       "index": 4,
@@ -130,14 +134,16 @@
           "target": "xs.length + ys.length + 1 = xs.length + 1 + ys.length"
         }
       ],
-      "explanation": "Simplifying with ih turns the goal into pure arithmetic about lengths."
+      "explanation": "Simplifying with ih turns the goal into pure arithmetic about lengths.",
+      "raw": "case cons\nys : List Nat\nx : Nat\nxs : List Nat\nih : (xs ++ ys).length = xs.length + ys.length\n⊢ xs.length + ys.length + 1 = xs.length + 1 + ys.length"
     },
     {
       "index": 5,
       "line": 7,
       "tactic": "omega",
       "goals": [],
-      "explanation": "omega solves the linear arithmetic. Both cases are closed: proof complete."
+      "explanation": "omega solves the linear arithmetic. Both cases are closed: proof complete.",
+      "raw": ""
     }
   ]
 }
