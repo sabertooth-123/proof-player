@@ -19,7 +19,8 @@
           "target": "[1, 2, 3, 4, 5].reverse = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "The initial goal is to show that reversing the list [1, 2, 3, 4, 5] produces [5, 4, 3, 2, 1]."
+      "explanation": "The initial goal is to show that reversing the list [1, 2, 3, 4, 5] produces [5, 4, 3, 2, 1].",
+      "raw": "⊢ [1, 2, 3, 4, 5].reverse = [5, 4, 3, 2, 1]"
     },
     {
       "index": 1,
@@ -31,7 +32,8 @@
           "target": "[2, 3, 4, 5].reverse ++ [1] = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "Rewriting reverse_cons removes the head 1 from the list being reversed and appends it to the end."
+      "explanation": "Rewriting reverse_cons removes the head 1 from the list being reversed and appends it to the end.",
+      "raw": "⊢ [2, 3, 4, 5].reverse ++ [1] = [5, 4, 3, 2, 1]"
     },
     {
       "index": 2,
@@ -43,7 +45,8 @@
           "target": "[3, 4, 5].reverse ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "Rewriting again peels off 2: only [3, 4, 5] is still reversed, with [2] and then [1] appended."
+      "explanation": "Rewriting again peels off 2: only [3, 4, 5] is still reversed, with [2] and then [1] appended.",
+      "raw": "⊢ [3, 4, 5].reverse ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
     },
     {
       "index": 3,
@@ -55,7 +58,8 @@
           "target": "[4, 5].reverse ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "Peeling off 3 leaves [4, 5] to reverse, followed by [3] ++ [2] ++ [1]."
+      "explanation": "Peeling off 3 leaves [4, 5] to reverse, followed by [3] ++ [2] ++ [1].",
+      "raw": "⊢ [4, 5].reverse ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
     },
     {
       "index": 4,
@@ -67,7 +71,8 @@
           "target": "[5].reverse ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "Peeling off 4 leaves just [5] to reverse; the left side already reads 5, 4, 3, 2, 1."
+      "explanation": "Peeling off 4 leaves just [5] to reverse; the left side already reads 5, 4, 3, 2, 1.",
+      "raw": "⊢ [5].reverse ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
     },
     {
       "index": 5,
@@ -79,14 +84,16 @@
           "target": "[].reverse ++ [5] ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
         }
       ],
-      "explanation": "The last rewrite peels off 5, so the list still being reversed is empty."
+      "explanation": "The last rewrite peels off 5, so the list still being reversed is empty.",
+      "raw": "⊢ [].reverse ++ [5] ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
     },
     {
       "index": 6,
       "line": 7,
       "tactic": "rfl",
       "goals": [],
-      "explanation": "The reverse of the empty list is the empty list, both sides are now the same list, and rfl closes the equality."
+      "explanation": "The reverse of the empty list is the empty list, both sides are now the same list, and rfl closes the equality.",
+      "raw": ""
     }
   ]
 }

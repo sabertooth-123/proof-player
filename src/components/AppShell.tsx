@@ -6,6 +6,7 @@ import PlaybackControls from "./PlaybackControls";
 import { GoalPanel } from "./GoalPanel";
 import { VisualizationPanel } from "./VisualizationPanel";
 import { HowItWorks } from "./HowItWorks";
+import RawLeanOutput from "./RawLeanOutput";
 
 interface AppShellProps {
   traces: ProofTrace[];
@@ -33,6 +34,7 @@ export default function AppShell({
   onReset,
 }: AppShellProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showRaw, setShowRaw] = useState(false);
   const lastIndex = selectedTrace.steps.length - 1;
 
   // Autoplay: one step per tick. Reaching the last step stops it by itself.
@@ -95,8 +97,22 @@ export default function AppShell({
 
         <div className={`right-panels right-panels--${selectedTrace.viz}`}>
           <section className="panel">
-            <h2>Goals</h2>
-            <GoalPanel goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+            <div className="panel-head">
+              <h2>{showRaw ? "Raw Lean output" : "Goals"}</h2>
+              <button
+                type="button"
+                className="raw-toggle"
+                aria-pressed={showRaw}
+                onClick={() => setShowRaw(!showRaw)}
+              >
+                {showRaw ? "Show goals" : "Show raw Lean output"}
+              </button>
+            </div>
+            {showRaw ? (
+              <RawLeanOutput raw={currentStep.raw} line={currentStep.line} />
+            ) : (
+              <GoalPanel goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+            )}
             <p className="provenance">Goals extracted from Lean {selectedTrace.provenance.lean}</p>
           </section>
 

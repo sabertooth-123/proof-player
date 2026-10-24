@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx",
+    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts",
     "traces": "node scripts/extract-traces.mjs"
   },
   "dependencies": {

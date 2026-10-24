@@ -19,7 +19,8 @@
           "target": "[1, 2, 3].reverse = [3, 2, 1]"
         }
       ],
-      "explanation": "The statement to prove: reversing [1, 2, 3] gives [3, 2, 1]."
+      "explanation": "The statement to prove: reversing [1, 2, 3] gives [3, 2, 1].",
+      "raw": "⊢ [1, 2, 3].reverse = [3, 2, 1]"
     },
     {
       "index": 1,
@@ -31,7 +32,8 @@
           "target": "[2, 3].reverse ++ [1] = [3, 2, 1]"
         }
       ],
-      "explanation": "reverse (1 :: rest) = reverse rest ++ [1]: the 1 moves to the back."
+      "explanation": "reverse (1 :: rest) = reverse rest ++ [1]: the 1 moves to the back.",
+      "raw": "⊢ [2, 3].reverse ++ [1] = [3, 2, 1]"
     },
     {
       "index": 2,
@@ -43,7 +45,8 @@
           "target": "[3].reverse ++ [2] ++ [1] = [3, 2, 1]"
         }
       ],
-      "explanation": "Same rule again: the 2 moves behind the remaining list."
+      "explanation": "Same rule again: the 2 moves behind the remaining list.",
+      "raw": "⊢ [3].reverse ++ [2] ++ [1] = [3, 2, 1]"
     },
     {
       "index": 3,
@@ -55,14 +58,16 @@
           "target": "[].reverse ++ [3] ++ [2] ++ [1] = [3, 2, 1]"
         }
       ],
-      "explanation": "And once more for the 3. Only the empty list is left to reverse."
+      "explanation": "And once more for the 3. Only the empty list is left to reverse.",
+      "raw": "⊢ [].reverse ++ [3] ++ [2] ++ [1] = [3, 2, 1]"
     },
     {
       "index": 4,
       "line": 5,
       "tactic": "rfl",
       "goals": [],
-      "explanation": "Both sides now compute to [3, 2, 1], so rfl closes the goal: proof complete."
+      "explanation": "Both sides now compute to [3, 2, 1], so rfl closes the goal: proof complete.",
+      "raw": ""
     }
   ]
 }
