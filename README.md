@@ -4,7 +4,7 @@ Step through a Lean 4 proof one tactic at a time, like scrubbing a video. After 
 
 Syntax Error 2026, Functional Programming track, problem 3.
 
-**Live demo:** _link added after deploy_
+**Live demo:** https://proof-player-eight.vercel.app/
 
 ## Why it's real
 
