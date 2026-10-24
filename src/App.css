@@ -1,7 +1,49 @@
 /* ===== Proof Player: page and layout (M2). Panel internals live in viz/viz.css. ===== */
 
+/* Design tokens. One accent (green) for the active step and primary actions; the
+   change colours match viz.css (--pp-changed for "new/changed", --pp-ok for "closed"). */
+:root {
+  --bg: #0b1020;
+  --surface: #121b2c;
+  --surface-2: #151e30;
+  --surface-code: #171a21;
+  --border: #293650;
+  --border-strong: #3b4a65;
+  --text: #e6eaf2;
+  --text-strong: #f5f7ff;
+  --text-muted: #a5b1c8;
+  --text-faint: #8b97ad;
+  --accent: #70c779;
+  --accent-text: #8ee3a0;
+  --accent-bg: #13241f;
+  --changed: #5ec8e5;
+  --warn: #e0b86a;
+  --danger: #f0907e;
+  --radius-s: 6px;
+  --radius-m: 9px;
+  --radius-l: 14px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --font-sans: Inter, "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Cascadia Code", Consolas, "JetBrains Mono", monospace;
+  --shadow: 0 10px 30px rgb(0 0 0 / 16%);
+  --ease: 150ms ease;
+}
+
 * {
   box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -414,18 +456,79 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.playback-controls__progress {
-  flex: 1 1 160px;
-  height: 7px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #293650;
+.playback-controls button.is-playing {
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
-.playback-controls__progress-fill {
-  height: 100%;
-  background: #70c779;
-  transition: width 150ms ease;
+/* Timeline: one marker per step, filled up to the current one. Colour = what the step did. */
+.timeline {
+  display: flex;
+  flex: 1 1 200px;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  flex: 1 1 0;
+  min-width: 6px;
+}
+
+.timeline__step {
+  display: block;
+  width: 100%;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: var(--border);
+  cursor: pointer;
+  transition: background var(--ease), transform var(--ease);
+}
+
+.playback-controls .timeline__step {
+  min-width: 0;
+  border: 0;
+}
+
+.timeline__step:hover {
+  transform: scaleY(1.35);
+}
+
+.timeline__step.is-done {
+  background: #2f6b45;
+}
+
+.timeline__step.is-done.timeline__step--split {
+  background: var(--changed);
+}
+
+.timeline__step.is-done.timeline__step--close,
+.timeline__step.is-done.timeline__step--complete {
+  background: var(--accent);
+}
+
+.timeline__step.is-done.timeline__step--restructure {
+  background: var(--warn);
+}
+
+.timeline__step.is-current {
+  outline: 2px solid var(--text-strong);
+  outline-offset: 1px;
+}
+
+.timeline__step:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Small dots under markers for split / close, visible even before you reach them */
+.timeline__step--split:not(.is-done),
+.timeline__step--close:not(.is-done),
+.timeline__step--complete:not(.is-done) {
+  box-shadow: inset 0 -3px 0 #4a5a78;
 }
 
 /* Current tactic above its explanation */
@@ -446,6 +549,38 @@ body {
   font-size: 0.95rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+/* "What changed": the transition summary, computed from Lean's states */
+.step-change {
+  padding: 6px 12px;
+  border-radius: var(--radius-s);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.step-change__label {
+  margin-right: 6px;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.step-change--split {
+  box-shadow: inset 3px 0 var(--changed);
+}
+
+.step-change--close,
+.step-change--complete {
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.step-change--restructure {
+  box-shadow: inset 3px 0 var(--warn);
 }
 
 .step-explanation--none {

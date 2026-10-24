@@ -44,6 +44,18 @@
 .pp-turnstile { color: var(--pp-muted); }
 .pp-new { background: var(--pp-changed-bg); box-shadow: inset 3px 0 0 var(--pp-changed); }
 .pp-removed { color: var(--pp-removed); text-decoration: line-through; opacity: 0.75; }
+.pp-goal-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pp-goal-head:empty { display: none; }
+.pp-badge { padding: 1px 8px; border: 1px solid var(--pp-border); border-radius: 999px; color: var(--pp-muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.pp-badge-new { border-color: var(--pp-changed); color: var(--pp-changed); }
+.pp-goal-current { position: relative; }
+.pp-goal-current::before { content: ""; position: absolute; left: -10px; top: 12px; bottom: 12px; width: 3px; border-radius: 2px; background: var(--pp-changed); opacity: 0.7; }
+.pp-goal-current:first-of-type::before { top: 0; }
+.pp-copy { flex: 0 0 auto; margin-left: auto; padding: 0 6px; border: 1px solid transparent; border-radius: 4px; background: none; color: var(--pp-muted); font: inherit; font-family: inherit; font-size: 11px; line-height: 1.6; opacity: 0; cursor: pointer; transition: opacity 150ms ease; }
+.pp-hyps li:hover .pp-copy, .pp-target:hover .pp-copy, .pp-copy:focus-visible { opacity: 1; border-color: var(--pp-border); }
+.pp-copy:focus-visible { outline: 2px solid var(--pp-changed); outline-offset: 1px; }
+.pp-more button { padding: 2px 8px; border: 1px dashed var(--pp-border); border-radius: 4px; background: none; color: var(--pp-muted); font: inherit; font-size: 13px; cursor: pointer; }
+.pp-note { margin-top: 8px !important; font-size: 13px; }
 .pp-done { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 8px; background: var(--pp-ok-bg); color: var(--pp-ok); font-size: 18px; font-weight: 700; animation: pp-fade 150ms ease-out; }
 
 /* List view: current (left of =) above, target (right of =) below */

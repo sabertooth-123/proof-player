@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ProofTrace, Goal } from "../types/proof";
+import { traceTransitions } from "../lib/transition";
 import ProofSelector from "./ProofSelector";
 import LeanFileOpener from "./LeanFileOpener";
 import CodeViewer from "./CodeViewer";
@@ -19,6 +20,7 @@ interface AppShellProps {
   onNext: () => void;
   onPrev: () => void;
   onReset: () => void;
+  onSeek: (index: number) => void;
   onAddTrace: (trace: ProofTrace) => void;
 }
 
@@ -34,8 +36,16 @@ export default function AppShell({
   onNext,
   onPrev,
   onReset,
+  onSeek,
   onAddTrace,
 }: AppShellProps) {
+  // What each step changed, computed once per proof from Lean's recorded states.
+  const transitions = useMemo(() => traceTransitions(selectedTrace.steps), [selectedTrace]);
+  const transition = transitions[currentStepIndex];
+  const markers = useMemo(
+    () => transitions.map((t, i) => ({ kind: t.kind, label: `${selectedTrace.steps[i].tactic}. ${t.summary.join(" ")}` })),
+    [transitions, selectedTrace],
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [showRaw, setShowRaw] = useState(false);
   const goalsRef = useRef<HTMLElement>(null);
@@ -106,14 +116,24 @@ export default function AppShell({
             stepIndex={currentStepIndex}
             stepCount={selectedTrace.steps.length}
             isPlaying={playing}
+            markers={markers}
             onTogglePlay={togglePlay}
             onNext={stopThen(onNext)}
             onPrev={stopThen(onPrev)}
             onReset={stopThen(onReset)}
+            onSeek={(i) => {
+              setIsPlaying(false);
+              onSeek(i);
+            }}
           />
 
           <div className="step-info">
             <pre className="step-tactic">{currentStep.tactic}</pre>
+            {transition && (
+              <p className={`step-change step-change--${transition.kind}`} aria-live="polite">
+                <span className="step-change__label">What changed</span> {transition.summary.join(" ")}
+              </p>
+            )}
             {currentStep.explanation ? (
               <p className="step-explanation">{currentStep.explanation}</p>
             ) : (
@@ -140,7 +160,7 @@ export default function AppShell({
             {showRaw ? (
               <RawLeanOutput raw={currentStep.raw} line={currentStep.line} />
             ) : (
-              <GoalPanel goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+              <GoalPanel key={selectedTrace.id} goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
             )}
             <p className="provenance">Goals extracted from Lean {selectedTrace.provenance.lean}</p>
           </section>

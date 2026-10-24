@@ -46,6 +46,15 @@ export function useProofPlayer() {
     setState((previous) => ({ ...previous, stepIndex: 0 }));
   }, []);
 
+  /** Jump straight to a step (timeline click, End key), clamped to the trace. */
+  const seek = useCallback((index: number) => {
+    setState((previous) => {
+      const trace = traces.find((item) => item.id === previous.traceId);
+      const lastIndex = Math.max(0, (trace?.steps.length ?? 1) - 1);
+      return { ...previous, stepIndex: Math.min(Math.max(0, index), lastIndex) };
+    });
+  }, [traces]);
+
   const selectTrace = useCallback((traceId: string) => {
     const exists = traces.some((trace) => trace.id === traceId);
     if (!exists) return;
@@ -69,6 +78,7 @@ export function useProofPlayer() {
     next,
     prev,
     reset,
+    seek,
     selectTrace,
     addTrace,
   };
