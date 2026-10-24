@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Step through a Lean proof one tactic at a time, with the real goals Lean reports." />
     <meta name="theme-color" content="#f7f5f0" />
+    <!-- Apply a saved theme before the first paint (see src/lib/theme.ts). -->
+    <script>
+      try {
+        if (localStorage.getItem("pp-theme") === "dark") {
+          document.documentElement.dataset.theme = "dark";
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", "#0f1115");
+        }
+      } catch (e) {}
+    </script>
     <!-- Inter for text, JetBrains Mono for Lean. The CSS falls back to system fonts offline. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

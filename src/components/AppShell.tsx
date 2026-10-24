@@ -11,6 +11,7 @@ import { VisualizationPanel } from "./VisualizationPanel";
 import { HowItWorks } from "./HowItWorks";
 import RawLeanOutput from "./RawLeanOutput";
 import PanelBoundary from "./PanelBoundary";
+import ThemeToggle from "./ThemeToggle";
 import { PredictFeedback, PredictPrompt, type PredictionResult } from "./PredictPanel";
 import { grade, observedChanges, type ChangeKind } from "../lib/predict";
 
@@ -150,9 +151,12 @@ export default function AppShell({
     <main className="app-shell">
       <header className="app-header">
         <div className="app-title">
-          <h1>
-            Proof Player <span>step through a Lean proof one tactic at a time</span>
-          </h1>
+          <div className="app-title__row">
+            <h1>
+              Proof Player <span>step through a Lean proof one tactic at a time</span>
+            </h1>
+            <ThemeToggle />
+          </div>
           <HowItWorks />
         </div>
         <ProofSelector
