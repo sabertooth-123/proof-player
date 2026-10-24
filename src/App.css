@@ -507,7 +507,26 @@ body {
 
   /* A graph needs height more than the goal list does. */
   .right-panels--graph {
-    grid-template-rows: fit-content(55%) minmax(0, 1fr);
+    grid-template-rows: fit-content(42%) minmax(0, 1fr);
+  }
+
+  /* Every pixel of the graph panel goes to the drawing. */
+  .right-panels--graph .panel--viz {
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+
+  .right-panels--graph .panel--viz h2 {
+    margin-bottom: 2px;
+  }
+
+  .right-panels--graph .panel--viz .pp-head {
+    margin-bottom: 0;
+  }
+
+  .right-panels--graph .panel--viz .pp-legend {
+    margin-top: 2px;
+    font-size: 13px;
   }
 
   .panel {

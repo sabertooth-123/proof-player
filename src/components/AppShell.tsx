@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ProofTrace, Goal } from "../types/proof";
 import ProofSelector from "./ProofSelector";
 import LeanFileOpener from "./LeanFileOpener";
@@ -38,6 +38,14 @@ export default function AppShell({
 }: AppShellProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showRaw, setShowRaw] = useState(false);
+  const goalsRef = useRef<HTMLElement>(null);
+
+  // When the goals don't fit, keep the bottom in view: that's where the newest
+  // hypothesis and the ⊢ target are.
+  useEffect(() => {
+    const el = goalsRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [selectedTrace.id, currentStepIndex, showRaw]);
   const lastIndex = selectedTrace.steps.length - 1;
 
   // Autoplay: one step per tick. Reaching the last step stops it by itself.
@@ -117,7 +125,7 @@ export default function AppShell({
         </div>
 
         <div className={`right-panels right-panels--${selectedTrace.viz}`}>
-          <section className="panel">
+          <section className="panel" ref={goalsRef}>
             <div className="panel-head">
               <h2>{showRaw ? "Raw Lean output" : "Goals"}</h2>
               <button
