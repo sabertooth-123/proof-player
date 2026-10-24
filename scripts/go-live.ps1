@@ -4,6 +4,11 @@
 #   3. writes that address to .env.production and pushes it, so Vercel rebuilds the site to use it
 # Works only while this laptop is on, awake and online. Stop with: npm run live:stop
 $ErrorActionPreference = "Stop"
+trap {
+  Write-Host "npm run live failed: $($_.Exception.Message)" -ForegroundColor Red
+  Write-Host "Logs are in .live\ (server.log, tunnel.log)."
+  exit 1
+}
 $root = Split-Path -Parent $PSScriptRoot
 $state = Join-Path $root ".live"
 $port = 7860
@@ -37,14 +42,23 @@ $tunnelLog = Join-Path $state "tunnel.log"
 $tunnel = Start-Process $cloudflared -ArgumentList "tunnel", "--no-autoupdate", "--url", "http://localhost:$port" -WindowStyle Hidden -PassThru `
   -RedirectStandardOutput (Join-Path $state "tunnel.out.log") -RedirectStandardError $tunnelLog
 $tunnel.Id | Set-Content (Join-Path $state "tunnel.pid")
-$url = Wait-Until {
-  if (Test-Path $tunnelLog) { ([regex]"https://[a-z0-9-]+\.trycloudflare\.com").Match((Get-Content $tunnelLog -Raw)).Value }
-} 60 "the tunnel address"
+# An empty file reads as $null, so always hand back a string.
+$readLog = { if (Test-Path $tunnelLog) { [string](Get-Content $tunnelLog -Raw) } else { "" } }
+$url = Wait-Until { ([regex]"https://[a-z0-9-]+\.trycloudflare\.com").Match((& $readLog)).Value } 60 "the tunnel address"
+# Don't look the name up before the tunnel is registered: Windows would cache "not found" for minutes.
+Wait-Until { (& $readLog) -match "Registered tunnel connection" } 60 "the tunnel to register" | Out-Null
+Start-Sleep -Seconds 5
 
-Write-Host "Waiting for $url to answer ..."
-Wait-Until {
-  try { (Invoke-WebRequest "$url/api/lean" -UseBasicParsing -TimeoutSec 5).Content -match '"available":true' } catch { $false }
-} 120 "the tunnel to reach the server" | Out-Null
+Write-Host "Checking $url answers ..."
+try {
+  Wait-Until {
+    try { (Invoke-WebRequest "$url/api/lean" -UseBasicParsing -TimeoutSec 8).Content -match '"available":true' } catch { $false }
+  } 90 "the tunnel to reach the server" | Out-Null
+  Write-Host "Tunnel reaches the Lean server."
+} catch {
+  # Often just this PC's DNS cache; the site itself keeps retrying for a few minutes.
+  Write-Warning "Couldn't reach $url from this PC yet ($($_.Exception.Message)). Continuing; check it in a browser."
+}
 
 # Point the live build at it. Only .env.production is committed.
 $envFile = Join-Path $root ".env.production"
