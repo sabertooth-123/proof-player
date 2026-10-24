@@ -16,5 +16,11 @@
     "title": "Finding a path in a graph",
     "description": "Each step proves one edge is in the graph and walks along it; the path 1 → 2 → 5 → 6 grows edge by edge.",
     "viz": "graph"
+  },
+  {
+    "id": "list_demo",
+    "title": "Reversing a longer list",
+    "description": "Repeated reverse rewrites expose how the list changes step by step.",
+    "viz": "list"
   }
 ]
