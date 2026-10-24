@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { traces as builtIn } from "../data/traces";
 import type { PlayerState, ProofTrace } from "../types/proof";
+import { clampStep } from "../lib/playback";
 
 export function useProofPlayer() {
   // Proofs opened from a .lean file this session (dev server only), newest first.
@@ -23,37 +24,19 @@ export function useProofPlayer() {
       ? selectedTrace?.steps[state.stepIndex - 1]
       : undefined;
 
-  const next = useCallback(() => {
+  /** Moves to `to(current index)`, clamped to the selected trace. */
+  const move = useCallback((to: (index: number) => number) => {
     setState((previous) => {
-      const trace = traces.find((item) => item.id === previous.traceId);
-      const lastIndex = Math.max(0, (trace?.steps.length ?? 1) - 1);
-
-      return {
-        ...previous,
-        stepIndex: Math.min(previous.stepIndex + 1, lastIndex),
-      };
+      const count = traces.find((item) => item.id === previous.traceId)?.steps.length ?? 1;
+      return { ...previous, stepIndex: clampStep(to(previous.stepIndex), count) };
     });
   }, [traces]);
 
-  const prev = useCallback(() => {
-    setState((previous) => ({
-      ...previous,
-      stepIndex: Math.max(0, previous.stepIndex - 1),
-    }));
-  }, []);
-
-  const reset = useCallback(() => {
-    setState((previous) => ({ ...previous, stepIndex: 0 }));
-  }, []);
-
-  /** Jump straight to a step (timeline click, End key), clamped to the trace. */
-  const seek = useCallback((index: number) => {
-    setState((previous) => {
-      const trace = traces.find((item) => item.id === previous.traceId);
-      const lastIndex = Math.max(0, (trace?.steps.length ?? 1) - 1);
-      return { ...previous, stepIndex: Math.min(Math.max(0, index), lastIndex) };
-    });
-  }, [traces]);
+  const next = useCallback(() => move((i) => i + 1), [move]);
+  const prev = useCallback(() => move((i) => i - 1), [move]);
+  const reset = useCallback(() => move(() => 0), [move]);
+  /** Jump straight to a step (timeline click, End key). */
+  const seek = useCallback((index: number) => move(() => index), [move]);
 
   const selectTrace = useCallback((traceId: string) => {
     const exists = traces.some((trace) => trace.id === traceId);

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { TransitionKind } from "../lib/transition";
+import { keyAction } from "../lib/playback";
 
 export interface TimelineMarker {
   kind: TransitionKind;
@@ -42,36 +43,24 @@ export default function PlaybackControls({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-
-      // Don't hijack keys while the user is typing or choosing a proof. Buttons are
-      // fine: after a mouse click the button keeps focus, and the keys must still work.
-      if (
-        target instanceof HTMLElement &&
-        (target.isContentEditable ||
-          ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))
-      ) {
-        return;
-      }
-      if (event.altKey || event.ctrlKey || event.metaKey) return;
-
-      if (event.code === "Space") {
-        // Also stops a focused button from being "clicked" by the same Space press.
-        event.preventDefault();
-        if (stepCount > 0) onTogglePlay();
-      } else if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        onPrev();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        onNext();
-      } else if (event.key === "Home") {
-        event.preventDefault();
-        onReset();
-      } else if (event.key === "End") {
-        event.preventDefault();
-        onSeek(lastIndex);
-      }
+      const target = event.target instanceof HTMLElement ? event.target : null;
+      const action = keyAction({
+        key: event.key,
+        code: event.code,
+        tagName: target?.tagName,
+        isContentEditable: target?.isContentEditable,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        metaKey: event.metaKey,
+      });
+      if (!action) return;
+      // Also stops a focused button from being "clicked" by the same Space press.
+      event.preventDefault();
+      if (action === "toggle" && stepCount > 0) onTogglePlay();
+      if (action === "prev") onPrev();
+      if (action === "next") onNext();
+      if (action === "first") onReset();
+      if (action === "last") onSeek(lastIndex);
     };
 
     window.addEventListener("keydown", handleKeyDown);

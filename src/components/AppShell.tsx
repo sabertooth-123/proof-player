@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ProofTrace, Goal } from "../types/proof";
 import { traceTransitions } from "../lib/transition";
+import { isAutoplaying } from "../lib/playback";
 import ProofSelector from "./ProofSelector";
 import LeanFileOpener from "./LeanFileOpener";
 import CodeViewer from "./CodeViewer";
@@ -60,7 +61,7 @@ export default function AppShell({
   const lastIndex = selectedTrace.steps.length - 1;
 
   // Autoplay: one step per tick. Reaching the last step stops it by itself.
-  const playing = isPlaying && currentStepIndex < lastIndex;
+  const playing = isAutoplaying(isPlaying, currentStepIndex, selectedTrace.steps.length);
 
   useEffect(() => {
     if (!playing) return;
