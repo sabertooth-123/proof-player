@@ -1,0 +1,37 @@
+# Runs on every PR and every push to main. Vercel deploys main to the live demo,
+# so a red check here means: don't merge.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # PowerShell's `>` writes UTF-16, which git stores as binary and the build can't read.
+      - name: No UTF-16 files
+        run: |
+          bad=0
+          while IFS= read -r f; do
+            case "$(head -c2 "$f" | od -An -tx1 | tr -d ' \n')" in
+              fffe|feff) echo "UTF-16 (re-save as UTF-8): $f"; bad=1 ;;
+            esac
+          done < <(git ls-files)
+          exit $bad
+
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
