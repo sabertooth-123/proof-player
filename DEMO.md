@@ -27,6 +27,12 @@ Press **Play** and let it finish.
 
 "`constructor` split one goal into two, case left and case right. The marker is cyan because goals split here. Lean works on the goal marked current." Press **→**. "rfl closed the left one, and only right is left." Press **→**. "Proof complete."
 
+**Optional, if you have 15 s more:** click **Predict**, then **Reset**, then **→**.
+
+"For learners there's a predict mode: before a tactic runs you guess what it'll change." Tick **The goal splits** and click **Reveal**. "It's graded against Lean's actual states, not by an AI."
+
+Click **Predict** again to turn it off.
+
 ## 4. Why you can trust it (20 s)
 
 Click **Show raw Lean output**.

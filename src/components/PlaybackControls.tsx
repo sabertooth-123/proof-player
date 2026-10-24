@@ -17,6 +17,9 @@ interface PlaybackControlsProps {
   onNext: () => void;
   onReset: () => void;
   onSeek: (index: number) => void;
+  /** Predict mode: Next asks first; Play is off so it can't skip the questions. */
+  predictMode?: boolean;
+  onTogglePredict?: () => void;
 }
 
 const KIND_NAMES: Partial<Record<TransitionKind, string>> = {
@@ -36,6 +39,8 @@ export default function PlaybackControls({
   onNext,
   onReset,
   onSeek,
+  predictMode = false,
+  onTogglePredict,
 }: PlaybackControlsProps) {
   const lastIndex = Math.max(0, stepCount - 1);
   const isFirst = stepIndex === 0;
@@ -80,9 +85,10 @@ export default function PlaybackControls({
 
         <button
           onClick={onTogglePlay}
-          disabled={stepCount === 0 || (!isPlaying && isLast)}
+          disabled={stepCount === 0 || (!isPlaying && isLast) || predictMode}
           aria-pressed={isPlaying}
           className={isPlaying ? "is-playing" : undefined}
+          title={predictMode ? "Play is off while predicting" : undefined}
         >
           {isPlaying ? "Pause" : "Play"}
         </button>
@@ -90,6 +96,18 @@ export default function PlaybackControls({
         <button onClick={onNext} disabled={isLast} aria-label="Next step">
           Next →
         </button>
+
+        {onTogglePredict && (
+          <button
+            type="button"
+            className={`predict-toggle${predictMode ? " is-on" : ""}`}
+            aria-pressed={predictMode}
+            onClick={onTogglePredict}
+            title="Guess what each tactic changes before it runs"
+          >
+            Predict
+          </button>
+        )}
       </div>
 
       <p aria-live="polite">

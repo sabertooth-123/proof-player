@@ -22,6 +22,7 @@ const { GoalPanel } = await import("../src/components/GoalPanel");
 const { VisualizationPanel } = await import("../src/components/VisualizationPanel");
 const { traceProblems, assertTrace } = await import("../src/lib/validateTrace");
 const { extractLeanFile, UploadError } = await import("../src/lib/leanUpload");
+const { PredictPrompt, PredictFeedback } = await import("../src/components/PredictPanel");
 
 const dir = new URL("../src/data/traces/", import.meta.url);
 const traces: ProofTrace[] = readdirSync(dir)
@@ -83,6 +84,28 @@ test("visualization: the same goals always give the same picture (no step number
   const a = renderToStaticMarkup(<VisualizationPanel kind="graph" goals={t.steps[4].goals} previous={t.steps[3].goals} />);
   const b = renderToStaticMarkup(<VisualizationPanel kind="graph" goals={t.steps[4].goals} previous={t.steps[3].goals} />);
   assert.equal(a, b);
+});
+
+test("predict: the question names the next tactic, offers five options, and needs a pick to reveal", () => {
+  const html = renderToStaticMarkup(<PredictPrompt tactic="constructor" onReveal={() => {}} />);
+  assert.ok(html.includes("<code>constructor</code>"));
+  assert.equal(html.split('type="checkbox"').length - 1, 5);
+  assert.match(html, /class="predict__reveal" disabled=""/);
+  assert.ok(html.includes(">Skip<"));
+});
+
+test("predict: feedback says exactly what was right, wrong and missed, with Lean's summary", () => {
+  const score = { right: 1, total: 2 };
+  const exact = renderToStaticMarkup(
+    <PredictFeedback result={{ grade: { exact: true, right: ["split"], wrong: [], missed: [], other: false }, summary: "Split main goal into 2 goals." }} score={score} onDismiss={() => {}} />,
+  );
+  assert.ok(exact.includes("Spot on.") && exact.includes("1 / 2 right") && exact.includes("Split main goal into 2 goals."));
+  const partly = renderToStaticMarkup(
+    <PredictFeedback result={{ grade: { exact: false, right: ["hypothesis"], wrong: ["target"], missed: ["close"], other: false }, summary: "x" }} score={score} onDismiss={() => {}} />,
+  );
+  assert.ok(partly.includes("Partly right.") && partly.includes("✗ The target changes, but it didn&#x27;t") && partly.includes("Also: a goal closes"));
+  const ungraded = renderToStaticMarkup(<PredictFeedback result={{ grade: null, summary: "x" }} score={score} onDismiss={() => {}} />);
+  assert.ok(ungraded.includes("Not graded"));
 });
 
 // Upload errors: a fake fetch stands in for the Lean server.

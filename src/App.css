@@ -660,6 +660,164 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* Predict mode */
+.playback-controls button.predict-toggle {
+  min-width: 0;
+  border-style: dashed;
+}
+
+.playback-controls button.predict-toggle.is-on {
+  border-style: solid;
+  border-color: var(--changed);
+  background: rgb(94 200 229 / 12%);
+  color: var(--changed);
+}
+
+.predict {
+  display: grid;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--changed);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+}
+
+.predict__question {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.predict__question code {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--surface-code);
+  font-family: var(--font-mono);
+  font-weight: 400;
+}
+
+.predict__question span {
+  color: var(--text-faint);
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.predict__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.predict__options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.predict__options label.is-picked {
+  border-color: var(--changed);
+  background: rgb(94 200 229 / 12%);
+}
+
+.predict__options input {
+  accent-color: var(--changed);
+}
+
+.predict__options label:focus-within {
+  outline: 2px solid var(--changed);
+  outline-offset: 2px;
+}
+
+.predict__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.predict__actions button,
+.predict__head button {
+  padding: 6px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-s);
+  background: #202c42;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.predict__actions .predict__reveal:not(:disabled) {
+  border-color: var(--changed);
+  color: var(--changed);
+}
+
+.predict__actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.predict--result {
+  gap: 6px;
+  padding: 8px 12px;
+  border-color: var(--border-strong);
+}
+
+.predict--result.is-exact {
+  border-color: var(--accent);
+}
+
+.predict__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.predict__head strong {
+  color: var(--text-strong);
+}
+
+.predict__head button {
+  margin-left: auto;
+  padding: 0 8px;
+}
+
+.predict__score {
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+.predict__grades {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.predict__grades .is-right {
+  color: var(--accent-text);
+}
+
+.predict__grades .is-wrong {
+  color: var(--danger);
+}
+
+.predict__grades .is-missed {
+  color: var(--text-muted);
+}
+
+.predict__actual {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
 /* "What changed": the transition summary, computed from Lean's states */
 .step-change {
   padding: 6px 12px;

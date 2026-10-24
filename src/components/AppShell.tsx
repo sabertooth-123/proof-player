@@ -11,6 +11,8 @@ import { VisualizationPanel } from "./VisualizationPanel";
 import { HowItWorks } from "./HowItWorks";
 import RawLeanOutput from "./RawLeanOutput";
 import PanelBoundary from "./PanelBoundary";
+import { PredictFeedback, PredictPrompt, type PredictionResult } from "./PredictPanel";
+import { grade, observedChanges, type ChangeKind } from "../lib/predict";
 
 interface AppShellProps {
   traces: ProofTrace[];
@@ -69,21 +71,78 @@ export default function AppShell({
     return () => window.clearTimeout(timer);
   }, [playing, currentStepIndex, onNext]);
 
-  const togglePlay = () => setIsPlaying(!playing && currentStepIndex < lastIndex);
+  // Predict mode: Next first asks what the tactic will change, then reveals and grades it.
+  const [predictMode, setPredictMode] = useState(false);
+  const [asking, setAsking] = useState(false);
+  const [result, setResult] = useState<PredictionResult | null>(null);
+  const [score, setScore] = useState({ right: 0, total: 0 });
 
-  // Any manual action stops autoplay.
+  const togglePlay = () => {
+    if (predictMode) return; // autoplay would skip the questions
+    setIsPlaying(!playing && currentStepIndex < lastIndex);
+  };
+
+  // Any manual action stops autoplay and drops a pending question or old result.
   const stopThen = (action: () => void) => () => {
     setIsPlaying(false);
+    setAsking(false);
+    setResult(null);
     action();
+  };
+
+  const next = () => {
+    setIsPlaying(false);
+    if (predictMode && currentStepIndex < lastIndex) {
+      if (!asking) {
+        setResult(null);
+        setAsking(true);
+        return;
+      }
+      reveal(null); // Next while asking = skip the question
+      return;
+    }
+    setResult(null);
+    onNext();
+  };
+
+  const reveal = (predicted: Set<ChangeKind> | null) => {
+    const upcoming = transitions[currentStepIndex + 1];
+    setAsking(false);
+    if (predicted && upcoming) {
+      const observed = observedChanges(upcoming);
+      const g = observed ? grade(predicted, observed) : null;
+      if (g && !g.other) setScore((s) => ({ right: s.right + (g.exact ? 1 : 0), total: s.total + 1 }));
+      setResult({ grade: g, summary: upcoming.summary.join(" ") });
+    } else {
+      setResult(null);
+    }
+    onNext();
+  };
+
+  const togglePredict = () => {
+    setIsPlaying(false);
+    setAsking(false);
+    setResult(null);
+    setScore({ right: 0, total: 0 });
+    setPredictMode(!predictMode);
   };
 
   const openUploaded = useCallback(
     (trace: ProofTrace) => {
       setIsPlaying(false);
+      setAsking(false);
+      setResult(null);
       onAddTrace(trace);
     },
     [onAddTrace],
   );
+
+  const selectTrace = (traceId: string) => {
+    setIsPlaying(false);
+    setAsking(false);
+    setResult(null);
+    onSelectTrace(traceId);
+  };
 
   const isComplete = currentStepIndex === lastIndex && currentStep.goals.length === 0;
 
@@ -99,10 +158,7 @@ export default function AppShell({
         <ProofSelector
           traces={traces}
           selectedTraceId={selectedTrace.id}
-          onSelect={(traceId) => {
-            setIsPlaying(false);
-            onSelectTrace(traceId);
-          }}
+          onSelect={selectTrace}
         />
       </header>
 
@@ -116,10 +172,7 @@ export default function AppShell({
                 onLoaded={openUploaded}
                 onBackToExamples={() => {
                   const firstBuiltIn = traces.find((t) => !t.id.startsWith("upload-"));
-                  if (firstBuiltIn) {
-                    setIsPlaying(false);
-                    onSelectTrace(firstBuiltIn.id);
-                  }
+                  if (firstBuiltIn) selectTrace(firstBuiltIn.id);
                 }}
               />
             }
@@ -130,34 +183,47 @@ export default function AppShell({
             stepCount={selectedTrace.steps.length}
             isPlaying={playing}
             markers={markers}
+            predictMode={predictMode}
+            onTogglePredict={togglePredict}
             onTogglePlay={togglePlay}
-            onNext={stopThen(onNext)}
+            onNext={next}
             onPrev={stopThen(onPrev)}
             onReset={stopThen(onReset)}
-            onSeek={(i) => {
-              setIsPlaying(false);
-              onSeek(i);
-            }}
+            onSeek={(i) => stopThen(() => onSeek(i))()}
           />
 
-          <div className="step-info">
-            <pre className="step-tactic">{currentStep.tactic}</pre>
-            {transition && (
-              <p className={`step-change step-change--${transition.kind}`} aria-live="polite">
-                <span className="step-change__label">What changed</span> {transition.summary.join(" ")}
-                {currentStepIndex === 0 && !playing && (
-                  <span className="step-change__hint"> Press Play, or → to run the first tactic.</span>
-                )}
-              </p>
-            )}
-            {currentStep.explanation ? (
-              <p className="step-explanation">{currentStep.explanation}</p>
-            ) : (
-              <p className="step-explanation step-explanation--none">
-                No explanation written for this step. The goals on the right are exactly what Lean reports.
-              </p>
-            )}
-          </div>
+          {asking && currentStepIndex < lastIndex ? (
+            <PredictPrompt
+              key={`${selectedTrace.id}:${currentStepIndex}`}
+              tactic={selectedTrace.steps[currentStepIndex + 1].tactic}
+              onReveal={reveal}
+            />
+          ) : (
+            <div className="step-info">
+              <pre className="step-tactic">{currentStep.tactic}</pre>
+              {result ? (
+                <PredictFeedback result={result} score={score} onDismiss={() => setResult(null)} />
+              ) : (
+                transition && (
+                  <p className={`step-change step-change--${transition.kind}`} aria-live="polite">
+                    <span className="step-change__label">What changed</span> {transition.summary.join(" ")}
+                    {currentStepIndex === 0 && !playing && (
+                      <span className="step-change__hint">
+                        {predictMode ? " Press → to predict what the first tactic does." : " Press Play, or → to run the first tactic."}
+                      </span>
+                    )}
+                  </p>
+                )
+              )}
+              {currentStep.explanation ? (
+                <p className="step-explanation">{currentStep.explanation}</p>
+              ) : (
+                <p className="step-explanation step-explanation--none">
+                  No explanation written for this step. The goals on the right are exactly what Lean reports.
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className={`right-panels right-panels--${selectedTrace.viz}`}>

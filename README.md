@@ -37,6 +37,11 @@ samples/*.lean ─► insert trace_state after every tactic ─► lean --json �
 - **What changed**: a summary of the transition, for example "Split main goal into 2 goals: left, right." or "Closed left."
 - **Goals**: case names, hypotheses and target. New and changed lines are highlighted, `current` marks the goal Lean works on next, long hypothesis lists collapse, and every line has a **Copy** button.
 - **Show raw Lean output**: swaps the parsed goals for Lean's exact `trace_state` text.
+- **Predict** (optional learning mode):
+  - Before each tactic runs, **Next** asks what you expect it to change: the target, a goal split, a new hypothesis, a goal closing, or nothing structural.
+  - **Reveal** runs the step and grades your guess against the same comparison that drives "What changed", with a running score.
+  - Steps whose states can't be compared reliably aren't graded. Play is off while predicting.
+  - No AI involved: it's computed from the recorded trace.
 
 ![Splitting a conjunction: constructor turns one goal into case left and case right](docs/goal-split.jpg)
 
@@ -89,7 +94,7 @@ Click **Open .lean file** in the Lean Source panel, or drag a `.lean` file onto 
 ## Checks
 
 ```bash
-npm test        # 66 tests
+npm test        # 71 tests
 npm run lint
 npm run build   # type-check and production build
 npm run traces  # regenerate traces (needs Lean); git should show only date changes
@@ -101,6 +106,7 @@ The tests cover:
 - the extractor's placement rules and the public-server rules;
 - the transition engine (matching, closed vs set aside, uncertain cases);
 - playback (clamping, autoplay stop, keys ignored while typing, disabled states, the timeline, the active source line);
+- Predict mode grading on every built-in proof, plus its question and result cards;
 - the goal inspector, the visualization fallback, and upload error handling against a fake server.
 
 GitHub Actions runs the UTF-16 file check, lint, build and tests on every PR and push to `main`.

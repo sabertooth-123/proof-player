@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts tests/lean-api.test.ts tests/transition.test.ts tests/ui.test.tsx tests/playback.test.tsx",
+    "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts tests/lean-api.test.ts tests/transition.test.ts tests/ui.test.tsx tests/playback.test.tsx tests/predict.test.ts",
     "traces": "node scripts/extract-traces.mjs",
     "space": "node scripts/build-space.mjs",
     "live": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/go-live.ps1",
