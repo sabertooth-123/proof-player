@@ -1,34 +1,42 @@
 /* ===== Proof Player: page and layout (M2). Panel internals live in viz/viz.css. ===== */
 
-/* Design tokens. One accent (green) for the active step and primary actions; the
-   change colours match viz.css (--pp-changed for "new/changed", --pp-ok for "closed"). */
+/* Design tokens: "light notebook". Warm paper background, white panels, ink text.
+   Blue = the active step and primary actions; teal = new/changed (matches --pp-changed
+   in viz.css); green = closed/complete (--pp-ok). Contrast of text tokens on white:
+   --text-muted 6.0:1, --text-faint 5.1:1, line numbers 3.6:1 (decorative). */
 :root {
-  --bg: #0b1020;
-  --surface: #121b2c;
-  --surface-2: #151e30;
-  --surface-code: #171a21;
-  --border: #293650;
-  --border-strong: #3b4a65;
-  --text: #e6eaf2;
-  --text-strong: #f5f7ff;
-  --text-muted: #a5b1c8;
-  --text-faint: #8b97ad;
-  --accent: #70c779;
-  --accent-text: #8ee3a0;
-  --accent-bg: #13241f;
-  --changed: #5ec8e5;
-  --warn: #e0b86a;
-  --danger: #f0907e;
+  color-scheme: light;
+  --bg: #f7f5f0;
+  --surface: #ffffff;
+  --surface-2: #fbfaf7;
+  --surface-code: #fdfcf9;
+  --surface-sunk: #f2efe8;
+  --border: #e3dfd6;
+  --border-strong: #cfc9bc;
+  --text: #2a2d33;
+  --text-strong: #1d1f24;
+  --text-muted: #5f646d;
+  --text-faint: #686d76;
+  --accent: #2453d6;
+  --accent-text: #1e46b8;
+  --accent-bg: #eaf0fd;
+  --accent-soft: #c9d6f7;
+  --changed: #0f8f83;
+  --changed-bg: rgb(15 143 131 / 10%);
+  --ok: #2f8a46;
+  --ok-bg: #e8f4ec;
+  --warn: #b7791f;
+  --danger: #b4331f;
   --radius-s: 6px;
-  --radius-m: 9px;
-  --radius-l: 14px;
+  --radius-m: 8px;
+  --radius-l: 10px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --font-sans: Inter, "Segoe UI", system-ui, sans-serif;
-  --font-mono: "Cascadia Code", Consolas, "JetBrains Mono", monospace;
-  --shadow: 0 10px 30px rgb(0 0 0 / 16%);
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+  --shadow: 0 1px 2px rgb(29 31 36 / 6%), 0 4px 14px rgb(29 31 36 / 5%);
   --ease: 150ms ease;
 }
 
@@ -49,7 +57,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .app-shell {
@@ -60,9 +68,7 @@ body {
   min-height: 100vh;
   margin: 0 auto;
   padding: 16px clamp(16px, 3vw, 32px);
-  background:
-    radial-gradient(ellipse at top left, #182543 0%, transparent 48%),
-    var(--bg);
+  background: var(--bg);
 }
 
 /* Header: title on the left, proof picker on the right */
@@ -73,7 +79,7 @@ body {
   justify-content: space-between;
   gap: 24px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #29334a;
+  border-bottom: 1px solid var(--border);
 }
 
 .app-title {
@@ -109,7 +115,7 @@ body {
 }
 
 .proof-selector label {
-  color: #c6d0e2;
+  color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -117,9 +123,9 @@ body {
 .proof-selector select {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #3a4762;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-m);
-  background: #151e31;
+  background: var(--surface);
   color: var(--text-strong);
   font: inherit;
 }
@@ -162,7 +168,7 @@ body {
 }
 
 .lean-opener__button:hover:not(:disabled) {
-  background: #1a3229;
+  background: var(--accent-soft);
 }
 
 .lean-opener__button:disabled {
@@ -182,7 +188,7 @@ body {
   display: grid;
   place-items: center;
   border: 3px dashed var(--accent);
-  background: rgb(11 16 32 / 85%);
+  background: rgb(247 245 240 / 90%);
   pointer-events: none;
 }
 
@@ -201,11 +207,11 @@ body {
   max-height: 55vh;
   overflow: auto;
   padding: 14px 16px;
-  border: 1px solid #f0907e;
+  border: 1px solid var(--danger);
   border-radius: 12px;
-  background: #1d1418;
-  box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
-  color: #f3d6d0;
+  background: #fff8f6;
+  box-shadow: 0 8px 30px rgb(29 31 36 / 14%);
+  color: #5a2418;
 }
 
 .lean-error__head {
@@ -218,7 +224,7 @@ body {
 
 .lean-error__head button {
   padding: 2px 8px;
-  border: 1px solid #6b3b38;
+  border: 1px solid #e7bdb2;
   border-radius: 6px;
   background: transparent;
   color: inherit;
@@ -227,15 +233,15 @@ body {
 
 .lean-error pre {
   margin: 0 0 8px;
-  color: #ffe9e4;
-  font-family: "Cascadia Code", Consolas, monospace;
+  color: #3d150c;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .lean-error p {
-  color: #c9a8a2;
+  color: #8a5146;
   font-size: 0.8rem;
 }
 
@@ -245,7 +251,7 @@ body {
 }
 
 .lean-error__head strong span {
-  color: #c9a8a2;
+  color: #8a5146;
   font-size: 0.78rem;
   font-weight: 400;
 }
@@ -263,7 +269,7 @@ body {
   margin: 0 0 8px;
   padding: 6px 10px;
   border-radius: var(--radius-s);
-  background: #2a1a1d;
+  background: #fbe9e5;
   font-family: var(--font-mono);
   font-size: 0.82rem;
 }
@@ -274,7 +280,7 @@ body {
 }
 
 .lean-error__line code {
-  color: #ffe9e4;
+  color: #3d150c;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -288,7 +294,7 @@ body {
 
 .lean-error__actions button {
   padding: 5px 10px;
-  border: 1px solid #6b3b38;
+  border: 1px solid #e7bdb2;
   border-radius: var(--radius-s);
   background: transparent;
   color: inherit;
@@ -363,7 +369,7 @@ body {
   padding: 14px 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
-  background: linear-gradient(145deg, #151e30, #111827);
+  background: var(--surface);
   box-shadow: var(--shadow);
 }
 
@@ -390,8 +396,8 @@ body {
   padding: 4px 10px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  background: #1a2438;
-  color: #c6d0e2;
+  background: var(--surface);
+  color: var(--text);
   font: inherit;
   font-size: 0.8rem;
   cursor: pointer;
@@ -418,18 +424,18 @@ body {
 }
 
 .raw-lean__caption code {
-  font-family: "Cascadia Code", Consolas, monospace;
-  color: #e2eaff;
+  font-family: var(--font-mono);
+  color: var(--text-strong);
 }
 
 .raw-lean__text {
   margin: 0;
   padding: 10px 12px;
-  border: 1px solid #33435e;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #0d1525;
-  color: #e2eaff;
-  font-family: "Cascadia Code", Consolas, monospace;
+  background: var(--surface-sunk);
+  color: var(--text-strong);
+  font-family: var(--font-mono);
   font-size: 15px;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -455,7 +461,7 @@ body {
   border-radius: var(--radius-l);
   background: var(--surface-code);
   box-shadow: var(--shadow);
-  color: #e5e9f0;
+  color: var(--text);
 }
 
 .code-viewer__head {
@@ -477,7 +483,7 @@ body {
   max-height: 65vh;
   overflow: auto;
   padding: 10px 0;
-  font-family: Consolas, "Courier New", monospace;
+  font-family: var(--font-mono);
   font-size: 14px;
   line-height: 1.7;
 }
@@ -488,14 +494,14 @@ body {
 }
 
 .code-line--active {
-  background: #1d3b32;
+  background: var(--accent-bg);
   box-shadow: inset 3px 0 var(--accent);
 }
 
 .code-line__number {
   flex: 0 0 48px;
   padding: 2px 10px;
-  color: #7888a4;
+  color: #8a8476;
   text-align: right;
   user-select: none;
 }
@@ -522,7 +528,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
   background: var(--surface);
-  color: #e5e9f0;
+  color: var(--text);
 }
 
 .playback-controls__buttons {
@@ -531,12 +537,12 @@ body {
   gap: 8px;
 }
 
-.playback-controls button {
+.playback-controls__buttons button {
   min-width: 92px;
   padding: 8px 14px;
   border: 1px solid var(--border-strong);
   border-radius: 8px;
-  background: #202c42;
+  background: var(--surface);
   color: inherit;
   font: inherit;
   font-weight: 600;
@@ -544,17 +550,31 @@ body {
   transition: background 150ms ease, border-color 150ms ease;
 }
 
-.playback-controls button:hover:not(:disabled) {
+.playback-controls__buttons button:hover:not(:disabled) {
   border-color: var(--accent);
-  background: #2a3b50;
+  background: var(--accent-bg);
+  color: var(--accent-text);
 }
 
-.playback-controls button:disabled {
+/* Next is the primary action: filled with the accent. */
+.playback-controls__buttons button[aria-label="Next step"]:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.playback-controls__buttons button[aria-label="Next step"]:hover:not(:disabled) {
+  background: var(--accent-text);
+  color: #fff;
+}
+
+.playback-controls__buttons button:disabled {
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.45;
 }
 
-.playback-controls button:focus-visible,
+
+.playback-controls__buttons button:focus-visible,
 .proof-selector select:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
@@ -565,7 +585,7 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.playback-controls button.is-playing {
+.playback-controls__buttons button.is-playing {
   border-color: var(--accent);
   color: var(--accent-text);
 }
@@ -597,17 +617,13 @@ body {
   transition: background var(--ease), transform var(--ease);
 }
 
-.playback-controls .timeline__step {
-  min-width: 0;
-  border: 0;
-}
 
 .timeline__step:hover {
   transform: scaleY(1.35);
 }
 
 .timeline__step.is-done {
-  background: #2f6b45;
+  background: var(--accent-soft);
 }
 
 .timeline__step.is-done.timeline__step--split {
@@ -616,7 +632,7 @@ body {
 
 .timeline__step.is-done.timeline__step--close,
 .timeline__step.is-done.timeline__step--complete {
-  background: var(--accent);
+  background: var(--ok);
 }
 
 .timeline__step.is-done.timeline__step--restructure {
@@ -637,7 +653,7 @@ body {
 .timeline__step--split:not(.is-done),
 .timeline__step--close:not(.is-done),
 .timeline__step--complete:not(.is-done) {
-  box-shadow: inset 0 -3px 0 #4a5a78;
+  box-shadow: inset 0 -3px 0 var(--border-strong);
 }
 
 /* Current tactic above its explanation */
@@ -652,24 +668,26 @@ body {
   margin: 0;
   padding: 10px 14px;
   border-radius: 8px;
-  background: #171d26;
-  color: #e2eaff;
-  font-family: "Cascadia Code", Consolas, monospace;
+  background: var(--surface-sunk);
+  color: var(--text-strong);
+  font-family: var(--font-mono);
   font-size: 0.95rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 /* Predict mode */
-.playback-controls button.predict-toggle {
+.playback-controls__buttons button.predict-toggle {
   min-width: 0;
   border-style: dashed;
+  border-color: #b3ac9d;
+  color: var(--text-muted);
 }
 
-.playback-controls button.predict-toggle.is-on {
+.playback-controls__buttons button.predict-toggle.is-on {
   border-style: solid;
   border-color: var(--changed);
-  background: rgb(94 200 229 / 12%);
+  background: var(--changed-bg);
   color: var(--changed);
 }
 
@@ -721,7 +739,7 @@ body {
 
 .predict__options label.is-picked {
   border-color: var(--changed);
-  background: rgb(94 200 229 / 12%);
+  background: var(--changed-bg);
 }
 
 .predict__options input {
@@ -743,7 +761,7 @@ body {
   padding: 6px 14px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-s);
-  background: #202c42;
+  background: var(--surface);
   color: var(--text);
   font: inherit;
   font-size: 0.85rem;
@@ -768,7 +786,7 @@ body {
 }
 
 .predict--result.is-exact {
-  border-color: var(--accent);
+  border-color: var(--ok);
 }
 
 .predict__head {
@@ -802,7 +820,7 @@ body {
 }
 
 .predict__grades .is-right {
-  color: var(--accent-text);
+  color: var(--ok);
 }
 
 .predict__grades .is-wrong {
@@ -847,7 +865,7 @@ body {
 
 .step-change--close,
 .step-change--complete {
-  box-shadow: inset 3px 0 var(--accent);
+  box-shadow: inset 3px 0 var(--ok);
 }
 
 .step-change--restructure {
@@ -863,8 +881,8 @@ body {
   padding: 10px 16px;
   border-left: 3px solid var(--accent);
   border-radius: 0 8px 8px 0;
-  background: #131d2e;
-  color: #c6d0e2;
+  background: var(--surface);
+  color: var(--text);
   line-height: 1.55;
 }
 
@@ -989,9 +1007,10 @@ body {
     padding: 12px;
   }
 
-  .playback-controls button {
+  /* Two rows of buttons instead of five squeezed into one */
+  .playback-controls__buttons button {
     min-width: 0;
-    flex: 1;
+    flex: 1 1 28%;
   }
 
   /* Big enough to tap */

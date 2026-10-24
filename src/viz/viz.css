@@ -1,19 +1,19 @@
 /* M3 styles. Class names start with pp- ; variables start with --pp- .
-   The app is always dark (see App.css), so these colors are dark on purpose and
-   do NOT follow the OS light/dark setting. Panels are flat: the card around them
-   comes from AppShell's .panel. Sizes are chosen to stay readable on a projector. */
+   The app uses one light "notebook" theme (see the tokens in App.css); these values
+   match it: ink text on white, teal for new/changed, green for closed. Panels are flat:
+   the card around them comes from AppShell's .panel. Sizes stay readable on a projector. */
 :root {
-  --pp-card: #0d1525;
-  --pp-border: #33435e;
-  --pp-text: #e2eaff;
-  --pp-muted: #a3b2cc;
-  --pp-changed: #5ec8e5;
-  --pp-changed-bg: rgb(94 200 229 / 16%);
-  --pp-on-accent: #07202b;
-  --pp-ok: #8ee3a0;
-  --pp-ok-bg: rgb(112 199 121 / 14%);
-  --pp-removed: #f0907e;
-  --pp-mono: Consolas, "JetBrains Mono", "Fira Code", ui-monospace, "DejaVu Sans Mono", monospace;
+  --pp-card: #ffffff;
+  --pp-border: #e3dfd6;
+  --pp-text: #1d1f24;
+  --pp-muted: #5f646d;
+  --pp-changed: #0f8f83;
+  --pp-changed-bg: rgb(15 143 131 / 10%);
+  --pp-on-accent: #ffffff;
+  --pp-ok: #2f8a46;
+  --pp-ok-bg: #e8f4ec;
+  --pp-removed: #b4331f;
+  --pp-mono: "JetBrains Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
 }
 
 /* Reset what the page's global styles do to us (centered text, boxed <code>, big <h2>). */
@@ -40,7 +40,7 @@
 .pp-hyps li > span, .pp-turnstile { flex: 0 0 auto; white-space: nowrap; }
 .pp-names { font-weight: 700; }
 .pp-hyps code, .pp-target code { flex: 1 1 auto; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
-.pp-target { display: flex; gap: 8px; padding: 8px; border-radius: 4px; font-family: var(--pp-mono); font-size: 18px; font-weight: 700; border-top: 2px solid var(--pp-text); }
+.pp-target { display: flex; gap: 8px; padding: 8px; border-radius: 4px; font-family: var(--pp-mono); font-size: 18px; font-weight: 700; border-top: 2px solid #8d877b; }
 .pp-turnstile { color: var(--pp-muted); }
 .pp-new { background: var(--pp-changed-bg); box-shadow: inset 3px 0 0 var(--pp-changed); }
 .pp-removed { color: var(--pp-removed); text-decoration: line-through; opacity: 0.75; }
@@ -64,7 +64,7 @@
 .pp-row-label strong { font-weight: 700; }
 .pp-boxes { display: flex; flex-wrap: wrap; gap: 8px; }
 .pp-box { min-width: 56px; padding: 10px 14px; text-align: center; font-family: var(--pp-mono); font-size: 24px; font-weight: 700; border: 2px solid var(--pp-border); border-radius: 8px; background: var(--pp-card); }
-.pp-box-current { border-color: var(--pp-text); }
+.pp-box-current { border-color: #8d877b; }
 .pp-box-target { border-style: dashed; color: var(--pp-muted); font-weight: 500; }
 .pp-box.pp-changed { border-color: var(--pp-changed); background: var(--pp-changed-bg); color: var(--pp-text); animation: pp-pop 160ms ease-out; }
 .pp-divider { display: flex; align-items: center; gap: 10px; margin: 12px 0; color: var(--pp-muted); font-family: var(--pp-mono); font-size: 22px; }
@@ -82,7 +82,7 @@
 .pp-edge-label { fill: var(--pp-changed); paint-order: stroke; stroke: var(--pp-card); stroke-width: 5px; stroke-linejoin: round; font-family: var(--pp-mono); font-size: 16px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
 .pp-arrow { fill: var(--pp-muted); }
 .pp-arrow-new { fill: var(--pp-changed); }
-.pp-node { fill: var(--pp-card); stroke: var(--pp-text); stroke-width: 2.5; }
+.pp-node { fill: var(--pp-card); stroke: #6b665c; stroke-width: 2.5; }
 .pp-node-current { fill: var(--pp-changed); stroke: var(--pp-changed); }
 .pp-node-halo { fill: none; stroke: var(--pp-changed); stroke-width: 2.5; opacity: 0.5; }
 .pp-node-text { fill: var(--pp-text); font-family: var(--pp-mono); font-size: 19px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
@@ -94,10 +94,10 @@
 
 /* "How it works" strip: one muted line, so it never competes with the panels */
 .pp-how { margin: 0 0 18px; }
-.pp-how ol { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0 0 2px; list-style: none; overflow-x: auto; }
-.pp-how li { flex: 0 0 auto; padding: 6px 12px; border: 1px solid var(--pp-border); border-radius: 8px; background: rgb(255 255 255 / 3%); color: var(--pp-muted); font-size: 14px; line-height: 1.3; white-space: nowrap; }
-.pp-how .pp-how-arrow { flex: 0 0 auto; padding: 0; border: 0; background: none; color: #5f6f8c; font-size: 16px; }
-.pp-how-mono { font-family: var(--pp-mono); font-size: 13px; }
+.pp-how ol { display: flex; align-items: center; gap: 6px; margin: 0; padding: 0 0 2px; list-style: none; overflow-x: auto; scrollbar-width: thin; }
+.pp-how li { flex: 0 0 auto; padding: 4px 9px; border: 1px solid var(--pp-border); border-radius: 6px; background: #ffffff; color: var(--pp-muted); font-size: 12.5px; line-height: 1.3; white-space: nowrap; }
+.pp-how .pp-how-arrow { flex: 0 0 auto; padding: 0; border: 0; background: none; color: #a8a294; font-size: 14px; }
+.pp-how-mono { font-family: var(--pp-mono); font-size: 12px; color: var(--pp-text); }
 
 /* Light transitions: CSS only, all under 200 ms */
 .pp-hyps li, .pp-target, .pp-box, .pp-chip { transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease; }
