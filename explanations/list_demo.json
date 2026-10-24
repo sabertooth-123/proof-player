@@ -1,10 +1,9 @@
-
 [
   "The initial goal is to show that reversing the list [1, 2, 3, 4, 5] produces [5, 4, 3, 2, 1].",
   "Rewriting reverse_cons removes the head 1 from the list being reversed and appends it to the end.",
-  "The reverse operation now applies to [2, 3, 4, 5], while 1 remains at the end of the expression.",
-  "The reverse operation now applies to [3, 4, 5], with 2, then 1 appended after it.",
-  "The reverse operation now applies to [4, 5], with 3, 2, and 1 already appended.",
-  "The reverse operation now applies to [5], with 4, 3, 2, and 1 appended in that order.",
-  "The reverse of the empty list simplifies to the empty list, and reflexivity closes the equality."
+  "Rewriting again peels off 2: only [3, 4, 5] is still reversed, with [2] and then [1] appended.",
+  "Peeling off 3 leaves [4, 5] to reverse, followed by [3] ++ [2] ++ [1].",
+  "Peeling off 4 leaves just [5] to reverse; the left side already reads 5, 4, 3, 2, 1.",
+  "The last rewrite peels off 5, so the list still being reversed is empty.",
+  "The reverse of the empty list is the empty list, both sides are now the same list, and rfl closes the equality."
 ]
