@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "tsx --test tests/viz.test.ts tests/panels.test.tsx tests/traces.test.ts tests/lean-api.test.ts",
     "traces": "node scripts/extract-traces.mjs",
-    "space": "node scripts/build-space.mjs"
+    "space": "node scripts/build-space.mjs",
+    "live": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/go-live.ps1",
+    "live:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/stop-live.ps1"
   },
   "dependencies": {
     "react": "^19.3.1",
