@@ -1,0 +1,39 @@
+
+import type { ProofTrace } from "../types/proof";
+
+interface ProofSelectorProps {
+  traces: ProofTrace[];
+  selectedTraceId: string;
+  onSelect: (traceId: string) => void;
+}
+
+export default function ProofSelector({
+  traces,
+  selectedTraceId,
+  onSelect,
+}: ProofSelectorProps) {
+  return (
+    <section className="proof-selector">
+      <label htmlFor="proof-select">Select a proof</label>
+
+      <select
+        id="proof-select"
+        value={selectedTraceId}
+        onChange={(event) => onSelect(event.target.value)}
+      >
+        {traces.map((trace) => (
+          <option key={trace.id} value={trace.id}>
+            {trace.title}
+          </option>
+        ))}
+      </select>
+
+      {traces.map(
+        (trace) =>
+          trace.id === selectedTraceId && (
+            <p key={trace.id}>{trace.description}</p>
+          ),
+      )}
+    </section>
+  );
+}
