@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ProofTrace, Goal } from "../types/proof";
 import ProofSelector from "./ProofSelector";
+import LeanFileOpener from "./LeanFileOpener";
 import CodeViewer from "./CodeViewer";
 import PlaybackControls from "./PlaybackControls";
 import { GoalPanel } from "./GoalPanel";
@@ -18,6 +19,7 @@ interface AppShellProps {
   onNext: () => void;
   onPrev: () => void;
   onReset: () => void;
+  onAddTrace: (trace: ProofTrace) => void;
 }
 
 const PLAY_INTERVAL_MS = 1000;
@@ -32,6 +34,7 @@ export default function AppShell({
   onNext,
   onPrev,
   onReset,
+  onAddTrace,
 }: AppShellProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showRaw, setShowRaw] = useState(false);
@@ -53,6 +56,14 @@ export default function AppShell({
     setIsPlaying(false);
     action();
   };
+
+  const openUploaded = useCallback(
+    (trace: ProofTrace) => {
+      setIsPlaying(false);
+      onAddTrace(trace);
+    },
+    [onAddTrace],
+  );
 
   const isComplete = currentStepIndex === lastIndex && currentStep.goals.length === 0;
 
@@ -77,7 +88,11 @@ export default function AppShell({
 
       <div className="player-layout">
         <div className="left-column">
-          <CodeViewer source={selectedTrace.source} activeLine={currentStep.line} />
+          <CodeViewer
+            source={selectedTrace.source}
+            activeLine={currentStep.line}
+            headerAction={<LeanFileOpener onLoaded={openUploaded} />}
+          />
 
           <PlaybackControls
             stepIndex={currentStepIndex}
@@ -91,7 +106,13 @@ export default function AppShell({
 
           <div className="step-info">
             <pre className="step-tactic">{currentStep.tactic}</pre>
-            <p className="step-explanation">{currentStep.explanation}</p>
+            {currentStep.explanation ? (
+              <p className="step-explanation">{currentStep.explanation}</p>
+            ) : (
+              <p className="step-explanation step-explanation--none">
+                No explanation written for this step. The goals on the right are exactly what Lean reports.
+              </p>
+            )}
           </div>
         </div>
 

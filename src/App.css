@@ -93,6 +93,99 @@ body {
   margin: 0;
 }
 
+/* Open a .lean file (dev server only); sits in the Lean Source header */
+
+.lean-opener__button {
+  padding: 4px 10px;
+  border: 1px dashed #70c779;
+  border-radius: 9px;
+  background: #13241f;
+  color: #8ee3a0;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.lean-opener__button:hover:not(:disabled) {
+  background: #1a3229;
+}
+
+.lean-opener__button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.lean-opener__button:focus-visible {
+  outline: 2px solid #70c779;
+  outline-offset: 3px;
+}
+
+.lean-drop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  border: 3px dashed #70c779;
+  background: rgb(11 16 32 / 85%);
+  pointer-events: none;
+}
+
+.lean-drop p {
+  color: #8ee3a0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.lean-error {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  width: min(560px, calc(100vw - 32px));
+  max-height: 55vh;
+  overflow: auto;
+  padding: 14px 16px;
+  border: 1px solid #f0907e;
+  border-radius: 12px;
+  background: #1d1418;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 45%);
+  color: #f3d6d0;
+}
+
+.lean-error__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.lean-error__head button {
+  padding: 2px 8px;
+  border: 1px solid #6b3b38;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lean-error pre {
+  margin: 0 0 8px;
+  color: #ffe9e4;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.lean-error p {
+  color: #c9a8a2;
+  font-size: 0.8rem;
+}
+
 /* Left: code, controls, explanation. Right: goals and visualization at full height. */
 
 .player-layout {
@@ -214,9 +307,16 @@ body {
   color: #e5e9f0;
 }
 
-.code-viewer h2 {
-  padding: 12px 18px;
+.code-viewer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
   border-bottom: 1px solid #293650;
+}
+
+.code-viewer h2 {
   color: #f0f4ff;
   font-size: 1rem;
   font-weight: 700;
@@ -346,6 +446,11 @@ body {
   font-size: 0.95rem;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.step-explanation--none {
+  color: #8b97ad;
+  font-style: italic;
 }
 
 .step-explanation {
