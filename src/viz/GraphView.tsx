@@ -1,7 +1,7 @@
 import type { VizFrame } from "../types/proof";
 
-const W = 360, H = 300, R = 105, NR = 18;
-const MIN_SLOTS = 8;
+const W = 360, H = 290, R = 104, NR = 21;
+const MIN_SLOTS = 6; // graph_path uses nodes 1..6, so they fill a hexagon
 
 type Props = { nodes: NonNullable<VizFrame["nodes"]>; edges: NonNullable<VizFrame["edges"]> };
 

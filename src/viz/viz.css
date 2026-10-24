@@ -1,82 +1,90 @@
-/* M3 styles. All class names start with pp- ; variables start with --pp- */
+/* M3 styles. Class names start with pp- ; variables start with --pp- .
+   The app is always dark (see App.css), so these colors are dark on purpose and
+   do NOT follow the OS light/dark setting. Panels are flat: the card around them
+   comes from AppShell's .panel. Sizes are chosen to stay readable on a projector. */
 :root {
-  --pp-surface: #f7f8fa;
-  --pp-border: #d5dae1;
-  --pp-text: #1c2733;
-  --pp-muted: #627084;
-  --pp-changed: #0b6e8a;
-  --pp-changed-bg: #dff1f6;
-  --pp-on-accent: #ffffff;
-  --pp-ok: #23764a;
-  --pp-ok-bg: #e0f3e8;
-  --pp-removed: #a8402f;
-  --pp-mono: "JetBrains Mono", "Fira Code", ui-monospace, "DejaVu Sans Mono", Consolas, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --pp-surface: #1b222b;
-    --pp-border: #364250;
-    --pp-text: #e6ebf1;
-    --pp-muted: #94a3b5;
-    --pp-changed: #6fd0ea;
-    --pp-changed-bg: #17394a;
-    --pp-on-accent: #0c1a21;
-    --pp-ok: #6fd6a0;
-    --pp-ok-bg: #173a2a;
-    --pp-removed: #f0907e;
-  }
+  --pp-card: #0d1525;
+  --pp-border: #33435e;
+  --pp-text: #e2eaff;
+  --pp-muted: #a3b2cc;
+  --pp-changed: #5ec8e5;
+  --pp-changed-bg: rgb(94 200 229 / 16%);
+  --pp-on-accent: #07202b;
+  --pp-ok: #8ee3a0;
+  --pp-ok-bg: rgb(112 199 121 / 14%);
+  --pp-removed: #f0907e;
+  --pp-mono: Consolas, "JetBrains Mono", "Fira Code", ui-monospace, "DejaVu Sans Mono", monospace;
 }
 
-.pp-panel { background: var(--pp-surface); border: 1px solid var(--pp-border); border-radius: 8px; padding: 14px 16px; color: var(--pp-text); }
-.pp-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-.pp-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
-.pp-muted { color: var(--pp-muted); font-size: 13px; }
+/* Reset what the page's global styles do to us (centered text, boxed <code>, big <h2>). */
+.pp-panel, .pp-how { text-align: left; color: var(--pp-text); letter-spacing: normal; }
+.pp-panel code, .pp-how code {
+  display: inline; padding: 0; border-radius: 0; background: none; color: inherit;
+  font-family: var(--pp-mono); font-size: inherit; line-height: inherit;
+}
+.pp-panel p { margin: 0; }
+
+.pp-panel { min-width: 0; font-size: 16px; line-height: 1.5; }
+.pp-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.pp-kind { font-size: 15px; font-weight: 600; color: var(--pp-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.pp-muted { color: var(--pp-muted); font-size: 15px; }
+.pp-panel p.pp-muted { color: var(--pp-muted); line-height: 1.5; }
 
 /* Goal panel */
-.pp-goal { border-top: 1px solid var(--pp-border); padding: 10px 0; }
+.pp-goal { border-top: 1px solid var(--pp-border); padding: 12px 0; }
 .pp-goal:first-of-type { border-top: 0; padding-top: 0; }
-.pp-case { display: inline-block; font-family: var(--pp-mono); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-.pp-hyps { list-style: none; margin: 0 0 8px; padding: 0; font-family: var(--pp-mono); font-size: 14px; }
-.pp-hyps li { display: flex; gap: 8px; padding: 2px 6px; border-radius: 4px; overflow-wrap: anywhere; }
-.pp-names { font-weight: 600; }
-.pp-hyps code, .pp-target code { font-family: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
-.pp-target { display: flex; gap: 8px; padding: 6px; border-radius: 4px; font-family: var(--pp-mono); font-size: 15px; font-weight: 600; border-top: 2px solid var(--pp-text); }
+.pp-case { display: inline-block; font-family: var(--pp-mono); font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--pp-ok); }
+.pp-hyps { list-style: none; margin: 0 0 10px; padding: 0; font-family: var(--pp-mono); font-size: 17px; }
+.pp-hyps li { display: flex; gap: 8px; padding: 3px 8px; border-radius: 4px; }
+/* Names and ":" never shrink or break (an "ih" must not become "i" / "h"); only the type wraps. */
+.pp-hyps li > span, .pp-turnstile { flex: 0 0 auto; white-space: nowrap; }
+.pp-names { font-weight: 700; }
+.pp-hyps code, .pp-target code { flex: 1 1 auto; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pp-target { display: flex; gap: 8px; padding: 8px; border-radius: 4px; font-family: var(--pp-mono); font-size: 18px; font-weight: 700; border-top: 2px solid var(--pp-text); }
 .pp-turnstile { color: var(--pp-muted); }
 .pp-new { background: var(--pp-changed-bg); box-shadow: inset 3px 0 0 var(--pp-changed); }
-.pp-removed { color: var(--pp-removed); text-decoration: line-through; opacity: 0.65; }
-.pp-done { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 6px; background: var(--pp-ok-bg); color: var(--pp-ok); font-weight: 600; animation: pp-fade 150ms ease-out; }
+.pp-removed { color: var(--pp-removed); text-decoration: line-through; opacity: 0.75; }
+.pp-done { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 8px; background: var(--pp-ok-bg); color: var(--pp-ok); font-size: 18px; font-weight: 700; animation: pp-fade 150ms ease-out; }
 
 /* List view: current (left of =) above, target (right of =) below */
-.pp-row-label { margin-bottom: 6px; }
-.pp-boxes { display: flex; flex-wrap: wrap; gap: 6px; }
-.pp-box { min-width: 44px; padding: 10px 12px; text-align: center; font-family: var(--pp-mono); font-size: 18px; font-weight: 600; border: 2px solid var(--pp-border); border-radius: 6px; background: var(--pp-surface); }
+.pp-row-label { margin-bottom: 8px; font-size: 16px; }
+.pp-row-label strong { font-weight: 700; }
+.pp-boxes { display: flex; flex-wrap: wrap; gap: 8px; }
+.pp-box { min-width: 56px; padding: 10px 14px; text-align: center; font-family: var(--pp-mono); font-size: 24px; font-weight: 700; border: 2px solid var(--pp-border); border-radius: 8px; background: var(--pp-card); }
 .pp-box-current { border-color: var(--pp-text); }
 .pp-box-target { border-style: dashed; color: var(--pp-muted); font-weight: 500; }
 .pp-box.pp-changed { border-color: var(--pp-changed); background: var(--pp-changed-bg); color: var(--pp-text); animation: pp-pop 160ms ease-out; }
-.pp-divider { display: flex; align-items: center; gap: 10px; margin: 10px 0; color: var(--pp-muted); font-family: var(--pp-mono); font-size: 18px; }
+.pp-divider { display: flex; align-items: center; gap: 10px; margin: 12px 0; color: var(--pp-muted); font-family: var(--pp-mono); font-size: 22px; }
 .pp-divider::before, .pp-divider::after { content: ""; flex: 1; border-top: 1px solid var(--pp-border); }
 
 /* Goal chips */
-.pp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.pp-chip { padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--pp-border); font-family: var(--pp-mono); font-size: 14px; }
+.pp-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.pp-chip { padding: 8px 16px; border-radius: 999px; border: 2px solid var(--pp-border); font-family: var(--pp-mono); font-size: 18px; font-weight: 600; }
 .pp-chip.pp-changed { border-color: var(--pp-changed); background: var(--pp-changed-bg); animation: pp-pop 160ms ease-out; }
 
 /* Graph view */
-.pp-graph { width: 100%; max-width: 420px; height: auto; display: block; }
-.pp-edge { stroke: var(--pp-muted); stroke-width: 2; opacity: 0.75; }
-.pp-edge.pp-changed { stroke: var(--pp-changed); stroke-width: 4.5; opacity: 1; stroke-dasharray: 200; animation: pp-draw 180ms ease-out; }
-.pp-edge-label { fill: var(--pp-changed); paint-order: stroke; stroke: var(--pp-surface); stroke-width: 4px; stroke-linejoin: round; font-family: var(--pp-mono); font-size: 12px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
+.pp-graph { width: 100%; max-width: 100%; height: auto; display: block; }
+.pp-edge { stroke: var(--pp-muted); stroke-width: 2.5; opacity: 0.8; }
+.pp-edge.pp-changed { stroke: var(--pp-changed); stroke-width: 5; opacity: 1; stroke-dasharray: 200; animation: pp-draw 180ms ease-out; }
+.pp-edge-label { fill: var(--pp-changed); paint-order: stroke; stroke: var(--pp-card); stroke-width: 5px; stroke-linejoin: round; font-family: var(--pp-mono); font-size: 16px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
 .pp-arrow { fill: var(--pp-muted); }
 .pp-arrow-new { fill: var(--pp-changed); }
-.pp-node { fill: var(--pp-surface); stroke: var(--pp-text); stroke-width: 2; }
+.pp-node { fill: var(--pp-card); stroke: var(--pp-text); stroke-width: 2.5; }
 .pp-node-current { fill: var(--pp-changed); stroke: var(--pp-changed); }
-.pp-node-halo { fill: none; stroke: var(--pp-changed); stroke-width: 2; opacity: 0.45; }
-.pp-node-text { fill: var(--pp-text); font-family: var(--pp-mono); font-size: 14px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.pp-node-halo { fill: none; stroke: var(--pp-changed); stroke-width: 2.5; opacity: 0.5; }
+.pp-node-text { fill: var(--pp-text); font-family: var(--pp-mono); font-size: 19px; font-weight: 700; text-anchor: middle; dominant-baseline: central; }
 .pp-node-text-current { fill: var(--pp-on-accent); }
-.pp-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; padding: 0; list-style: none; color: var(--pp-muted); font-size: 13px; }
-.pp-legend li { display: flex; align-items: center; gap: 6px; }
-.pp-swatch-node { width: 12px; height: 12px; border-radius: 50%; background: var(--pp-changed); }
-.pp-swatch-edge { width: 18px; height: 0; border-top: 4px solid var(--pp-changed); }
+.pp-legend { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 10px 0 0; padding: 0; list-style: none; color: var(--pp-muted); font-size: 15px; }
+.pp-legend li { display: flex; align-items: center; gap: 8px; }
+.pp-swatch-node { width: 14px; height: 14px; border-radius: 50%; background: var(--pp-changed); }
+.pp-swatch-edge { width: 22px; height: 0; border-top: 5px solid var(--pp-changed); }
+
+/* "How it works" strip: one muted line, so it never competes with the panels */
+.pp-how { margin: 0 0 18px; }
+.pp-how ol { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0 0 2px; list-style: none; overflow-x: auto; }
+.pp-how li { flex: 0 0 auto; padding: 6px 12px; border: 1px solid var(--pp-border); border-radius: 8px; background: rgb(255 255 255 / 3%); color: var(--pp-muted); font-size: 14px; line-height: 1.3; white-space: nowrap; }
+.pp-how .pp-how-arrow { flex: 0 0 auto; padding: 0; border: 0; background: none; color: #5f6f8c; font-size: 16px; }
+.pp-how-mono { font-family: var(--pp-mono); font-size: 13px; }
 
 /* Light transitions: CSS only, all under 200 ms */
 .pp-hyps li, .pp-target, .pp-box, .pp-chip { transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease, color 150ms ease; }

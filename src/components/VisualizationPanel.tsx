@@ -8,7 +8,7 @@ import { ListView } from "../viz/ListView";
 import "../viz/viz.css";
 
 const DERIVERS: Record<VizKind, DeriveViz> = { list: deriveList, graph: deriveGraph, goal: deriveGoals };
-const TITLES: Record<VizKind, string> = { list: "List", graph: "Graph", goal: "Open goals" };
+const TITLES: Record<VizKind, string> = { list: "List view", graph: "Graph view", goal: "Open goals" };
 
 interface Props { kind: VizKind; goals: Goal[]; previous: Goal[] | null }
 
@@ -18,7 +18,7 @@ export function VisualizationPanel({ kind, goals, previous }: Props) {
   return (
     <section className="pp-panel" aria-label="Visualization">
       <div className="pp-head">
-        <h2>{TITLES[kind]}</h2>
+        <span className="pp-kind">{TITLES[kind]}</span>
         {goals.length === 0 && <span className="pp-muted">Goal closed</span>}
       </div>
       {kind === "list" && <ListView items={frame.items ?? []} />}

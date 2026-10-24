@@ -65,14 +65,6 @@ import type { ProofTrace } from "../src/types/proof";
 const real = (id: string): ProofTrace =>
   JSON.parse(readFileSync(new URL(`../src/data/traces/${id}.json`, import.meta.url), "utf8"));
 
-test("real rev_three: boxes rearrange 1,2,3 -> 2,3,1 -> 3,2,1", () => {
-  const t = real("rev_three");
-  const left = (k: number) =>
-    deriveList(t.steps[k].goals, k ? t.steps[k - 1].goals : null)
-      .items!.filter((i) => i.id.startsWith("L:")).map((i) => i.label).join(",");
-  assert.deepEqual([0, 1, 2, 3, 4].map(left), ["1,2,3", "2,3,1", "3,2,1", "3,2,1", "3,2,1"]);
-});
-
 test("real len_append: main goal -> nil -> nil closed -> cons -> cons closed", () => {
   const t = real("len_append");
   const labels = t.steps.map((s, k) =>

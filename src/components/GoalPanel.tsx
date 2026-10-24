@@ -21,7 +21,6 @@ export function GoalPanel({ goals, previous, isFinal = false }: Props) {
   return (
     <section className="pp-panel" aria-live="polite" aria-label="Proof goals">
       <div className="pp-head">
-        <h2>Goals</h2>
         <span className="pp-muted">{goals.length === 1 ? "1 goal left" : `${goals.length} goals left`}</span>
       </div>
       {goals.map((goal, i) => {
