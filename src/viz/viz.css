@@ -56,6 +56,7 @@
 .pp-copy:focus-visible { outline: 2px solid var(--pp-changed); outline-offset: 1px; }
 .pp-more button { padding: 2px 8px; border: 1px dashed var(--pp-border); border-radius: 4px; background: none; color: var(--pp-muted); font: inherit; font-size: 13px; cursor: pointer; }
 .pp-note { margin-top: 8px !important; font-size: 13px; }
+.pp-fallback { margin: -4px 0 10px !important; font-size: 13px; }
 .pp-done { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 8px; background: var(--pp-ok-bg); color: var(--pp-ok); font-size: 18px; font-weight: 700; animation: pp-fade 150ms ease-out; }
 
 /* List view: current (left of =) above, target (right of =) below */

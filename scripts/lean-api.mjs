@@ -28,12 +28,12 @@ const withoutComments = (source) =>
 export function checkPublicUpload(source) {
   const code = withoutComments(source);
   for (const [pattern, what] of FORBIDDEN) {
-    if (pattern.test(code)) throw new ExtractError(`not allowed on the public server: ${what}`);
+    if (pattern.test(code)) throw new ExtractError(`not allowed on the public server: ${what}`, "", "policy");
   }
   code.split("\n").forEach((line, i) => {
     if (line.trim() === "" || /^\s/.test(line) || line.startsWith("|")) return;
     if (!ALLOWED_COMMANDS.test(line)) {
-      throw new ExtractError(`line ${i + 1}: only theorem/lemma/example/def/inductive/structure/namespace/open are allowed at top level`);
+      throw new ExtractError(`line ${i + 1}: only theorem/lemma/example/def/inductive/structure/namespace/open are allowed at top level`, "", "policy");
     }
   });
 }
@@ -48,7 +48,7 @@ function readBody(req, maxBytes) {
       // Stop buffering but keep draining, so the client still receives our 413 answer.
       req.off("data", onData);
       req.resume();
-      reject(Object.assign(new ExtractError(`file is too large (max ${Math.round(maxBytes / 1000)} KB)`), { status: 413 }));
+      reject(Object.assign(new ExtractError(`file is too large (max ${Math.round(maxBytes / 1000)} KB)`, "", "limit"), { status: 413 }));
     };
     req.on("data", onData);
     req.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
@@ -113,7 +113,7 @@ export function createLeanHandler({
       return res.end();
     }
     // Public server: other websites may not spend our Lean time from their visitors' browsers.
-    if (strict && origin && !allowOrigins.includes(origin)) return send(res, 403, { error: "origin not allowed" });
+    if (strict && origin && !allowOrigins.includes(origin)) return send(res, 403, { error: "origin not allowed", kind: "policy" });
 
     if (route === "/api/lean") {
       try {
@@ -125,7 +125,7 @@ export function createLeanHandler({
 
     if (req.method !== "POST") return send(res, 405, { error: "POST a { name, source } body" });
     const client = String(req.headers["x-forwarded-for"] ?? req.socket.remoteAddress ?? "").split(",")[0].trim();
-    if (strict && !allow(client)) return send(res, 429, { error: "too many uploads; wait a minute and try again" });
+    if (strict && !allow(client)) return send(res, 429, { error: "too many uploads; wait a minute and try again", kind: "limit" });
 
     try {
       const { name, source } = JSON.parse(await readBody(req, maxBytes));
@@ -146,7 +146,10 @@ export function createLeanHandler({
       // ExtractError = a problem with the file (Lean error, unsupported layout). Anything else is ours.
       const ours = !(e instanceof ExtractError || e instanceof SyntaxError);
       if (ours) console.error(e);
-      return send(res, ours ? 500 : (e.status ?? 422), { error: ours ? "internal error" : e.message });
+      return send(res, ours ? 500 : (e.status ?? 422), {
+        error: ours ? "internal error" : e.message,
+        kind: ours ? "server" : (e.kind ?? "layout"),
+      });
     }
   };
 }

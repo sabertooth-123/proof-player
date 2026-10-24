@@ -9,6 +9,7 @@ import { GoalPanel } from "./GoalPanel";
 import { VisualizationPanel } from "./VisualizationPanel";
 import { HowItWorks } from "./HowItWorks";
 import RawLeanOutput from "./RawLeanOutput";
+import PanelBoundary from "./PanelBoundary";
 
 interface AppShellProps {
   traces: ProofTrace[];
@@ -109,7 +110,18 @@ export default function AppShell({
           <CodeViewer
             source={selectedTrace.source}
             activeLine={currentStep.line}
-            headerAction={<LeanFileOpener onLoaded={openUploaded} />}
+            headerAction={
+              <LeanFileOpener
+                onLoaded={openUploaded}
+                onBackToExamples={() => {
+                  const firstBuiltIn = traces.find((t) => !t.id.startsWith("upload-"));
+                  if (firstBuiltIn) {
+                    setIsPlaying(false);
+                    onSelectTrace(firstBuiltIn.id);
+                  }
+                }}
+              />
+            }
           />
 
           <PlaybackControls
@@ -160,14 +172,18 @@ export default function AppShell({
             {showRaw ? (
               <RawLeanOutput raw={currentStep.raw} line={currentStep.line} />
             ) : (
-              <GoalPanel key={selectedTrace.id} goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+              <PanelBoundary name="goal panel" resetKey={`${selectedTrace.id}:${currentStepIndex}`}>
+                <GoalPanel key={selectedTrace.id} goals={currentStep.goals} previous={previousGoals} isFinal={isComplete} />
+              </PanelBoundary>
             )}
             <p className="provenance">Goals extracted from Lean {selectedTrace.provenance.lean}</p>
           </section>
 
           <section className="panel panel--viz">
             <h2>Visualization</h2>
-            <VisualizationPanel kind={selectedTrace.viz} goals={currentStep.goals} previous={previousGoals} />
+            <PanelBoundary name="visualization" resetKey={`${selectedTrace.id}:${currentStepIndex}`}>
+              <VisualizationPanel kind={selectedTrace.viz} goals={currentStep.goals} previous={previousGoals} />
+            </PanelBoundary>
           </section>
         </div>
       </div>

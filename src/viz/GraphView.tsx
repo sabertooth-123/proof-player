@@ -71,7 +71,7 @@ export function GraphView({ nodes, edges }: Props) {
         <li><span className="pp-swatch pp-swatch-node" /> current node</li>
         <li><span className="pp-swatch pp-swatch-edge" /> newest edge</li>
       </ul>
-      {edges.length === 0 && <p className="pp-muted">No edge proved yet.</p>}
+      {edges.length === 0 && <p className="pp-muted">No (a, b) pair among the hypotheses yet.</p>}
     </div>
   );
 }

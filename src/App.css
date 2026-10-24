@@ -228,6 +228,104 @@ body {
   font-size: 0.8rem;
 }
 
+.lean-error__head strong {
+  display: grid;
+  gap: 2px;
+}
+
+.lean-error__head strong span {
+  color: #c9a8a2;
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.lean-error--policy,
+.lean-error--limit,
+.lean-error--network,
+.lean-error--server {
+  border-color: var(--warn);
+}
+
+.lean-error__line {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  background: #2a1a1d;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.lean-error__line span {
+  flex: 0 0 auto;
+  color: var(--danger);
+}
+
+.lean-error__line code {
+  color: #ffe9e4;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.lean-error__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.lean-error__actions button {
+  padding: 5px 10px;
+  border: 1px solid #6b3b38;
+  border-radius: var(--radius-s);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.lean-error__actions button:hover,
+.lean-error__actions button:focus-visible {
+  border-color: var(--danger);
+}
+
+.lean-opener__spinner {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 6px;
+  border: 2px solid var(--accent-text);
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -1px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.panel-error {
+  padding: 12px;
+  border: 1px dashed var(--warn);
+  border-radius: var(--radius-m);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
 /* Left: code, controls, explanation. Right: goals and visualization at full height. */
 
 .player-layout {

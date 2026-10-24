@@ -21,11 +21,17 @@ const EXPLANATIONS = join(ROOT, "explanations");
 const OUT = join(ROOT, "src", "data", "traces");
 const TURNSTILE = "⊢";
 
-/** A problem with the sample (not a bug in this script). `detail` holds extra debug text for the CLI. */
+/**
+ * A problem with the sample (not a bug in this script). `detail` holds extra debug text
+ * for the CLI. `kind` tells the app what went wrong:
+ *   "lean" Lean rejected the proof | "layout" a layout the extractor can't read |
+ *   "limit" too big/slow | "server" Lean couldn't run | "policy" not allowed publicly
+ */
 export class ExtractError extends Error {
-  constructor(message, detail = "") {
+  constructor(message, detail = "", kind = "layout") {
     super(message);
     this.detail = detail;
+    this.kind = kind;
   }
 }
 
@@ -118,7 +124,7 @@ function leanBinary() {
 
 export function leanVersion() {
   const r = spawnSync(leanBinary(), ["--version"], { encoding: "utf8" });
-  if (r.error) throw new ExtractError(`cannot run lean (${r.error.message}); install elan or set LEAN`);
+  if (r.error) throw new ExtractError(`cannot run lean (${r.error.message}); install elan or set LEAN`, "", "server");
   return r.stdout.match(/version (\S+?),/)?.[1] ?? r.stdout.trim();
 }
 
@@ -133,14 +139,14 @@ export function runLean(instrumented, origOf = [], timeoutMs = 120_000) {
     writeFileSync(file, instrumented, "utf8");
     // encoding: "utf8" matters on Windows: the default code page garbles the turnstile.
     const r = spawnSync(leanBinary(), ["--json", file], { encoding: "utf8", timeout: timeoutMs });
-    if (r.error?.code === "ETIMEDOUT") throw new ExtractError(`Lean took longer than ${timeoutMs / 1000} s and was stopped`);
-    if (r.error) throw new ExtractError(`lean failed to start: ${r.error.message}`);
+    if (r.error?.code === "ETIMEDOUT") throw new ExtractError(`Lean took longer than ${timeoutMs / 1000} s and was stopped`, "", "limit");
+    if (r.error) throw new ExtractError(`lean failed to start: ${r.error.message}`, "", "server");
     const messages = r.stdout.split("\n").filter(Boolean).map((l) => JSON.parse(l));
     const errors = messages.filter((m) => m.severity === "error");
     if (errors.length) {
       const where = (line) => (origOf[line - 1] ? `line ${origOf[line - 1]}` : `instrumented line ${line}`);
       const shown = errors.map((m) => `  ${where(m.pos.line)}: ${m.data}`).join("\n");
-      throw new ExtractError(`Lean reported errors:\n${shown}`, `--- instrumented file ---\n${numbered(instrumented)}`);
+      throw new ExtractError(`Lean reported errors:\n${shown}`, `--- instrumented file ---\n${numbered(instrumented)}`, "lean");
     }
     const traces = new Map();
     const inOrder = messages.filter((m) => m.kind === "trace").sort((a, b) => a.pos.line - b.pos.line || a.pos.column - b.pos.column);

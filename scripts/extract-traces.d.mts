@@ -1,9 +1,12 @@
 // Types for the parts of extract-traces.mjs used from TypeScript (vite.config.ts, tests).
 import type { Goal, ProofStep, ProofTrace, VizKind } from "../src/types/proof.ts";
 
+export type ExtractErrorKind = "lean" | "layout" | "limit" | "server" | "policy";
+
 export class ExtractError extends Error {
   detail: string;
-  constructor(message: string, detail?: string);
+  kind: ExtractErrorKind;
+  constructor(message: string, detail?: string, kind?: ExtractErrorKind);
 }
 
 export interface SampleMeta {
