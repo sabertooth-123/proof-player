@@ -1,0 +1,92 @@
+{
+  "id": "list_demo",
+  "title": "Reversing a longer list",
+  "description": "Repeated reverse rewrites expose how the list changes step by step.",
+  "source": "\ntheorem list_demo : [1, 2, 3, 4, 5].reverse = [5, 4, 3, 2, 1] := by\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rw [List.reverse_cons]\n  rfl\n",
+  "viz": "list",
+  "provenance": {
+    "lean": "4.35.0",
+    "extractedAt": "2026-10-24"
+  },
+  "steps": [
+    {
+      "index": 0,
+      "line": 2,
+      "tactic": "theorem list_demo : [1, 2, 3, 4, 5].reverse = [5, 4, 3, 2, 1] := by",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[1, 2, 3, 4, 5].reverse = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "The initial goal is to show that reversing the list [1, 2, 3, 4, 5] produces [5, 4, 3, 2, 1]."
+    },
+    {
+      "index": 1,
+      "line": 3,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[2, 3, 4, 5].reverse ++ [1] = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "Rewriting reverse_cons removes the head 1 from the list being reversed and appends it to the end."
+    },
+    {
+      "index": 2,
+      "line": 4,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[3, 4, 5].reverse ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "The reverse operation now applies to [2, 3, 4, 5], while 1 remains at the end of the expression."
+    },
+    {
+      "index": 3,
+      "line": 5,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[4, 5].reverse ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "The reverse operation now applies to [3, 4, 5], with 2, then 1 appended after it."
+    },
+    {
+      "index": 4,
+      "line": 6,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[5].reverse ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "The reverse operation now applies to [4, 5], with 3, 2, and 1 already appended."
+    },
+    {
+      "index": 5,
+      "line": 7,
+      "tactic": "rw [List.reverse_cons]",
+      "goals": [
+        {
+          "hypotheses": [],
+          "target": "[].reverse ++ [5] ++ [4] ++ [3] ++ [2] ++ [1] = [5, 4, 3, 2, 1]"
+        }
+      ],
+      "explanation": "The reverse operation now applies to [5], with 4, 3, 2, and 1 appended in that order."
+    },
+    {
+      "index": 6,
+      "line": 8,
+      "tactic": "rfl",
+      "goals": [],
+      "explanation": "The reverse of the empty list simplifies to the empty list, and reflexivity closes the equality."
+    }
+  ]
+}
